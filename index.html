@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kramat Tools - Split & TOTP</title>
+    <title>Kramat Tools </title>
     <style>
         /* --- CSS Variables & Theme --- */
         :root {
@@ -259,7 +259,7 @@
                     <h3 style="margin:0;">Input Data</h3>
                     <button class="btn-secondary" onclick="clearSplit()">Reset</button>
                 </div>
-                <textarea id="inputData" rows="6" placeholder="&#10;"></textarea>
+                <textarea id="inputData" rows="6" placeholder=""></textarea>
                 
                 <button class="btn-primary" style="margin-top:15px;" onclick="processData()">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:5px; vertical-align:middle;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
@@ -281,11 +281,11 @@
             </div>
         </div>
 
-        <!-- TAB 2: TOTP GENERATOR (BULK SIMPLE) -->
+        <!-- TAB 2: TOTP GENERATOR (1 Minute Expiry) -->
         <div id="tab-totp" class="tab-content">
             <div class="card">
                 <div class="totp-header">
-                    <h3>Bulk TOTP Generator</h3>
+                    <h3>Bulk TOTP Generator (60s)</h3>
                     <div class="timer-text" id="totpTimerText">Ready</div>
                 </div>
 
@@ -296,8 +296,8 @@
                 <div class="row">
                     <div class="col">
                         <div class="form-group">
-                            <label>Input Secrets (Satu Secret Per Baris)</label>
-                            <textarea id="totpInput" rows="10" placeholder="&#10;&#10;" oninput="startAutoTOTP()"></textarea>
+                            <label>Input Secrets </label>
+                            <textarea id="totpInput" rows="10" placeholder="" oninput="startAutoTOTP()"></textarea>
                         </div>
                         <button class="btn-danger" onclick="resetTOTP()">Reset</button>
                     </div>
@@ -376,9 +376,8 @@
             document.getElementById('outputCode').value = '';
         }
 
-        // --- 4. TOTP LOGIC (Web Crypto API) ---
+        // --- 4. TOTP LOGIC (Web Crypto API - 60s Step) ---
         
-        // Helper: Base32 to Uint8Array
         function base32ToBytes(base32) {
             const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
             let bits = 0;
@@ -405,7 +404,8 @@
                 if (keyBytes.length === 0) throw new Error("Invalid Secret");
 
                 const epoch = Math.floor(Date.now() / 1000);
-                const time = Math.floor(epoch / 30);
+                // DIUBAH DARI 30 MENJADI 60 DETIK
+                const time = Math.floor(epoch / 60);
 
                 const timeBuffer = new ArrayBuffer(8);
                 const timeView = new DataView(timeBuffer);
@@ -426,7 +426,6 @@
                     (hmacBytes[offset + 3] & 0xff);
                 
                 const otp = binary % 1000000;
-                // Return 6 digits only, no spaces
                 return otp.toString().padStart(6, '0'); 
             } catch (e) {
                 return "ERROR";
@@ -454,8 +453,6 @@
             for (let line of lines) {
                 line = line.trim();
                 if(!line) continue;
-
-                // Langsung proses seluruh baris sebagai secret (tanpa parsing spasi)
                 const code = await getTOTPCode(line);
                 results.push(code);
             }
@@ -464,8 +461,9 @@
 
             // Update Progress Bar
             const epoch = Math.floor(Date.now() / 1000);
-            const secondsLeft = 30 - (epoch % 30);
-            const progressPercent = (secondsLeft / 30) * 100;
+            // DIUBAH DARI 30 MENJADI 60 DETIK
+            const secondsLeft = 60 - (epoch % 60);
+            const progressPercent = (secondsLeft / 60) * 100;
             
             progressBar.style.width = progressPercent + "%";
             timerText.innerText = `Refresh dalam ${secondsLeft} detik`;
@@ -506,11 +504,8 @@
 
         // Init
         document.addEventListener('DOMContentLoaded', () => {
-            // Theme Init
             const savedTheme = localStorage.getItem('theme');
             applyTheme(savedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
-            
-            // Start TOTP Interval
             startAutoTOTP();
         });
 
