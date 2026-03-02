@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kramat Tools - Split & TOTP</title>
+    <style>
+        /* --- CSS Variables & Theme --- */
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --success: #10b981;
+            --input-bg: #0f172a;
+            --tab-active: #1e293b;
+            --tab-inactive: #0f172a;
+            --tab-border-active: #6366f1;
+        }
+
+        body.light-mode {
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --input-bg: #f1f5f9;
+            --tab-active: #ffffff;
+            --tab-inactive: #f1f5f9;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 20px;
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* --- Header --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .theme-toggle:hover { background-color: var(--border); }
+
+        /* --- Tabs Navigation --- */
+        .tabs-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1px;
+        }
+
+        .tab-btn {
+            background: var(--tab-inactive);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            border-bottom: none;
+            padding: 10px 20px;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+            margin-bottom: -1px;
+        }
+
+        .tab-btn.active {
+            background: var(--tab-active);
+            color: var(--primary);
+            border-color: var(--tab-border-active);
+            border-bottom: 1px solid var(--tab-active);
+        }
+
+        /* --- Tab Content --- */
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Cards & Inputs --- */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); }
+        
+        input[type="text"], textarea {
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        input:focus, textarea:focus { border-color: var(--primary); }
+
+        .row { display: flex; gap: 20px; }
+        .col { flex: 1; }
+        @media (max-width: 768px) { .row { flex-direction: column; } }
+
+        button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        
+        button.btn-primary {
+            background-color: var(--primary);
+            color: white;
+            width: 100%;
+        }
+        button.btn-primary:hover { background-color: var(--primary-hover); }
+        
+        .btn-secondary {
+            background-color: var(--border);
+            color: var(--text);
+            padding: 5px 12px;
+            font-size: 0.8rem;
+        }
+        .btn-secondary:hover { filter: brightness(1.1); }
+
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn-danger:hover { background-color: #dc2626; }
+
+        .btn-copy {
+            background-color: var(--success);
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn-copy:hover { background-color: #059669; }
+
+        /* --- TOTP Specifics --- */
+        .totp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background-color: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            width: 100%;
+            transition: width 1s linear;
+        }
+
+        .timer-text {
+            text-align: right;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        /* --- Toast --- */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: var(--success);
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+        }
+        #toast.show { visibility: visible; opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Multi Tools</h1>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+            <svg id="icon-sun" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            <svg id="icon-moon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+    </header>
+
+    <div class="container">
+        <!-- Navigasi Tab -->
+        <nav class="tabs-nav">
+            <button class="tab-btn active" onclick="switchTab('split')">Split Tool</button>
+            <button class="tab-btn" onclick="switchTab('totp')">TOTP Generator</button>
+        </nav>
+
+        <!-- TAB 1: SPLIT TOOL -->
+        <div id="tab-split" class="tab-content active">
+            <section class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h3 style="margin:0;">Input Data</h3>
+                    <button class="btn-secondary" onclick="clearSplit()">Reset</button>
+                </div>
+                <textarea id="inputData" rows="6" placeholder="&#10;"></textarea>
+                
+                <button class="btn-primary" style="margin-top:15px;" onclick="processData()">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:5px; vertical-align:middle;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                    Proses Split
+                </button>
+            </section>
+
+            <div class="output-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; @media(max-width:768px){grid-template-columns:1fr;}">
+                <section class="card">
+                    <label>Username</label>
+                    <textarea id="outputUser" readonly rows="5" placeholder="Hasil username..."></textarea>
+                    <button class="btn-copy" onclick="copyToClipboard('outputUser')">Salin Username</button>
+                </section>
+                <section class="card">
+                    <label>Secret / Key</label>
+                    <textarea id="outputCode" readonly rows="5" placeholder="Hasil secret..."></textarea>
+                    <button class="btn-copy" onclick="copyToClipboard('outputCode')">Salin Secret</button>
+                </section>
+            </div>
+        </div>
+
+        <!-- TAB 2: TOTP GENERATOR (BULK SIMPLE) -->
+        <div id="tab-totp" class="tab-content">
+            <div class="card">
+                <div class="totp-header">
+                    <h3>Bulk TOTP Generator</h3>
+                    <div class="timer-text" id="totpTimerText">Ready</div>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-bar" id="totpProgressBar"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label>Input Secrets (Satu Secret Per Baris)</label>
+                            <textarea id="totpInput" rows="10" placeholder="&#10;&#10;" oninput="startAutoTOTP()"></textarea>
+                        </div>
+                        <button class="btn-danger" onclick="resetTOTP()">Reset</button>
+                    </div>
+                    
+                    <div class="col">
+                        <div class="form-group">
+                            <label>Hasil Kode (6 Digit)</label>
+                            <textarea id="totpOutput" readonly rows="10" placeholder=""></textarea>
+                        </div>
+                        <button class="btn-copy" onclick="copyToClipboard('totpOutput')">Salin Semua Hasil</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast">Notifikasi</div>
+
+    <script>
+        // --- 1. THEME LOGIC ---
+        function applyTheme(theme) {
+            const isLight = theme === 'light';
+            document.body.classList.toggle('light-mode', isLight);
+            document.getElementById('icon-sun').style.display = isLight ? 'block' : 'none';
+            document.getElementById('icon-moon').style.display = isLight ? 'none' : 'block';
+        }
+
+        function toggleTheme() {
+            const isLight = document.body.classList.contains('light-mode');
+            const newTheme = isLight ? 'dark' : 'light';
+            applyTheme(newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // --- 2. TABS LOGIC ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            const btns = document.querySelectorAll('.tab-btn');
+            if(tabId === 'split') btns[0].classList.add('active');
+            else btns[1].classList.add('active');
+        }
+
+        // --- 3. SPLIT TOOL LOGIC ---
+        function processData() {
+            const rawInput = document.getElementById('inputData').value;
+            if (!rawInput.trim()) return showToast("Data kosong!", "#ef4444");
+
+            const lines = rawInput.split('\n');
+            let users = [], codes = [];
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (line) {
+                    const splitIndex = line.search(/\s/);
+                    if (splitIndex > 0) {
+                        users.push(line.substring(0, splitIndex).trim());
+                        codes.push(line.substring(splitIndex).trim());
+                    } else {
+                        users.push(line);
+                        codes.push("");
+                    }
+                }
+            });
+
+            document.getElementById('outputUser').value = users.join('\n');
+            document.getElementById('outputCode').value = codes.join('\n');
+            showToast("Data berhasil diproses!");
+        }
+
+        function clearSplit() {
+            document.getElementById('inputData').value = '';
+            document.getElementById('outputUser').value = '';
+            document.getElementById('outputCode').value = '';
+        }
+
+        // --- 4. TOTP LOGIC (Web Crypto API) ---
+        
+        // Helper: Base32 to Uint8Array
+        function base32ToBytes(base32) {
+            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+            let bits = 0;
+            let value = 0;
+            let output = [];
+            base32 = base32.toUpperCase().replace(/[^A-Z2-7]/g, "");
+
+            for (let i = 0; i < base32.length; i++) {
+                const val = alphabet.indexOf(base32.charAt(i));
+                if (val === -1) continue;
+                value = (value << 5) | val;
+                bits += 5;
+                if (bits >= 8) {
+                    output.push((value >>> (bits - 8)) & 255);
+                    bits -= 8;
+                }
+            }
+            return new Uint8Array(output);
+        }
+
+        async function getTOTPCode(secret) {
+            try {
+                const keyBytes = base32ToBytes(secret);
+                if (keyBytes.length === 0) throw new Error("Invalid Secret");
+
+                const epoch = Math.floor(Date.now() / 1000);
+                const time = Math.floor(epoch / 30);
+
+                const timeBuffer = new ArrayBuffer(8);
+                const timeView = new DataView(timeBuffer);
+                timeView.setUint32(4, time, false);
+
+                const cryptoKey = await window.crypto.subtle.importKey(
+                    "raw", keyBytes, { name: "HMAC", hash: "SHA-1" }, false, ["sign"]
+                );
+
+                const signature = await window.crypto.subtle.sign("HMAC", cryptoKey, timeBuffer);
+                const hmacBytes = new Uint8Array(signature);
+
+                const offset = hmacBytes[hmacBytes.length - 1] & 0xf;
+                const binary =
+                    ((hmacBytes[offset] & 0x7f) << 24) |
+                    ((hmacBytes[offset + 1] & 0xff) << 16) |
+                    ((hmacBytes[offset + 2] & 0xff) << 8) |
+                    (hmacBytes[offset + 3] & 0xff);
+                
+                const otp = binary % 1000000;
+                // Return 6 digits only, no spaces
+                return otp.toString().padStart(6, '0'); 
+            } catch (e) {
+                return "ERROR";
+            }
+        }
+
+        let totpInterval;
+
+        async function runMultiTOTP() {
+            const inputVal = document.getElementById('totpInput').value;
+            const outputEl = document.getElementById('totpOutput');
+            const timerText = document.getElementById('totpTimerText');
+            const progressBar = document.getElementById('totpProgressBar');
+
+            if (!inputVal.trim()) {
+                outputEl.value = "";
+                timerText.innerText = "Menunggu input...";
+                progressBar.style.width = "0%";
+                return;
+            }
+
+            const lines = inputVal.split('\n');
+            let results = [];
+
+            for (let line of lines) {
+                line = line.trim();
+                if(!line) continue;
+
+                // Langsung proses seluruh baris sebagai secret (tanpa parsing spasi)
+                const code = await getTOTPCode(line);
+                results.push(code);
+            }
+
+            outputEl.value = results.join('\n');
+
+            // Update Progress Bar
+            const epoch = Math.floor(Date.now() / 1000);
+            const secondsLeft = 30 - (epoch % 30);
+            const progressPercent = (secondsLeft / 30) * 100;
+            
+            progressBar.style.width = progressPercent + "%";
+            timerText.innerText = `Refresh dalam ${secondsLeft} detik`;
+        }
+
+        function startAutoTOTP() {
+            clearInterval(totpInterval);
+            runMultiTOTP(); 
+            totpInterval = setInterval(runMultiTOTP, 1000);
+        }
+
+        function resetTOTP() {
+            document.getElementById('totpInput').value = '';
+            document.getElementById('totpOutput').value = '';
+            clearInterval(totpInterval);
+            document.getElementById('totpProgressBar').style.width = "0%";
+            document.getElementById('totpTimerText').innerText = "Ready";
+        }
+
+        // --- 5. GENERAL UTILS ---
+        function copyToClipboard(id) {
+            const el = document.getElementById(id);
+            if(!el.value) return showToast("Tidak ada data!", "#ef4444");
+            
+            el.select();
+            navigator.clipboard.writeText(el.value).then(() => showToast("Teks disalin!"));
+        }
+
+        function showToast(msg, color) {
+            const t = document.getElementById("toast");
+            t.innerText = msg;
+            if(color) t.style.backgroundColor = color;
+            else t.style.backgroundColor = "var(--success)";
+            
+            t.className = "show";
+            setTimeout(() => t.className = t.className.replace("show", ""), 3000);
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            // Theme Init
+            const savedTheme = localStorage.getItem('theme');
+            applyTheme(savedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+            
+            // Start TOTP Interval
+            startAutoTOTP();
+        });
+
+    </script>
+</body>
+</html>
