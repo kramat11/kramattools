@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kramat Tools Ultimate</title>
+    <title>Kramat Tools </title>
     <style>
         /* --- CSS Variables & Theme --- */
         :root {
@@ -266,7 +266,7 @@
                     <h3 style="margin:0;">Input Data</h3>
                     <button class="btn-secondary" onclick="clearSplit()">Reset</button>
                 </div>
-                <textarea id="inputData" rows="6" placeholder="&#10;"></textarea>
+                <textarea id="inputData" rows="6" placeholder="user1 secretkey123&#10;user2 secretkey456"></textarea>
                 
                 <button class="btn-primary" style="margin-top:15px;" onclick="processData()">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
@@ -288,7 +288,7 @@
             </div>
         </div>
 
-        <!-- TAB 2: TOTP GENERATOR -->
+        <!-- TAB 2: TOTP GENERATOR 
         <div id="tab-totp" class="tab-content">
             <div class="card">
                 <div class="totp-header">
@@ -304,7 +304,7 @@
                     <div class="col">
                         <div class="form-group">
                             <label>Input Secrets (Satu Secret Per Baris)</label>
-                            <textarea id="totpInput" rows="10" placeholder="&#10;&#10;" oninput="startAutoTOTP()"></textarea>
+                            <textarea id="totpInput" rows="10" placeholder="JBSWY3DPEHPK3PXP&#10;KRSXG5DSN5XW4==" oninput="startAutoTOTP()"></textarea>
                         </div>
                         <button class="btn-danger" onclick="resetTOTP()">Reset</button>
                     </div>
@@ -312,7 +312,7 @@
                     <div class="col">
                         <div class="form-group">
                             <label>Hasil Kode (6 Digit)</label>
-                            <textarea id="totpOutput" readonly rows="10" placeholder=""></textarea>
+                            <textarea id="totpOutput" readonly rows="10" placeholder="Hasil kode akan muncul di sini..."></textarea>
                         </div>
                         <button class="btn-copy" onclick="copyToClipboard('totpOutput')">Salin Semua Hasil</button>
                     </div>
@@ -320,14 +320,14 @@
             </div>
         </div>
 
-        <!-- TAB 3: USERNAME GENERATOR (UPDATED LOGIC) -->
+        <!-- TAB 3: USERNAME GENERATOR -->
         <div id="tab-genuser" class="tab-content">
             <div class="card">
                 <h3>Generator Username </h3>
                 <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:15px;">
+                     <code></code>
                 </p>
 
-                <!-- Hanya input jumlah -->
                 <div class="form-group">
                     <label>Jumlah Generate</label>
                     <input type="number" id="genCount" value="10" min="1" max="500">
@@ -344,7 +344,7 @@
                     <label style="margin:0;">Hasil Username</label>
                     <button class="btn-secondary" onclick="document.getElementById('genOutput').value='';">Reset</button>
                 </div>
-                <textarea id="genOutput" readonly rows="12" placeholder="Hasil generate akan muncul di sini...&#10;Contoh: sarah.connor45"></textarea>
+                <textarea id="genOutput" readonly rows="12" placeholder="Hasil generate akan muncul di sini..."></textarea>
                 <button class="btn-copy" onclick="copyToClipboard('genOutput')">Salin Semua Username</button>
             </section>
         </div>
@@ -355,7 +355,7 @@
     <div id="toast">Notifikasi</div>
 
     <script>
-        // --- DATA NAMA (200+ American Female Names & Surnames) ---
+        // --- DATA NAMA ---
         const firstNamesRaw = "Emma,Olivia,Ava,Sophia,Isabella,Mia,Charlotte,Amelia,Harper,Evelyn,Abigail,Emily,Elizabeth,Sofia,Avery,Ella,Scarlett,Grace,Lily,Aria,Eleanor,Harper,Camila,Penelope,Layla,Chloe,Victoria,Madison,Eleanor,Grace,Scarlett,Nora,Riley,Violet,Luna,Zoey,Stella,Leah,Audrey,Skylar,Bella,Claire,Nora,Lydia,Vivian,Aurora,Anna,Samanara,Caroline,Genesis,Naomi,Cora,Maya,Piper,Ruby,Isla,Kinsley,Scarlett,Autumn,Paisley,Savannah,Brooklyn,Bella,Quinn,Valentina,Taylor,Clara,Kaylee,Allison,Hailey,Gianna,Isabelle,Sadie,Natalia,Lila,Leah,Sarah,Kylie,Annabelle,Addison,Claire,Stella,Naomi,Reagan,Charlie,Vivian,Peyton,Harley,Quinn,Penelope,Willow,Emery,Iris,Jade,Summer,Nora,Elise,Margaret,Mackenzie,Lydia,Hailey,Kennedi,Julia,Georgia,Leilani,Elsie,Eva,Athena,Delilah,Finley,Sadie,Maya,Milani,Harmony,Gemma,Clara,Eden,Serenity,Piper,Arabella,Sara,Valentina,Madeline,June,Josephine,Calliope,Lucy,Phoebe,Adeline,Delilah,Rose,Brielle,Summer,Kayleigh,Madelyn,Kate,Jade,Eliza,Maci,Nadia,Paige,Blakely,Kelsey,Melody,London,Paris,Genesis,Skyler,Baylee,Katrina,Miranda,Angelina,Stella,Juliana,Lauren,Kaitlyn,Nancy,Helen,Patricia,Dorothy,Linda,Barbara,Susan,Jessica,Karen,Kathryn,Ashley,Melissa,Michelle,Lisa,Nancy,Betty,Margaret,Sandra,Sharon,Brenda,Pamela,Donna,Deborah,Carol,Cynthia,Kathleen,Amy,Shirley,Angela,Helen,Anna,Rebecca,Dorothy,Judy,Rose,Janet,Diane,Alice,Julie,Heather,Teresa,Carolyn,Cherry,Eileen,Tammy,Stephanie,Rachel,Kathleen,Marie,Christina,Debra,Amanda,Joanne,Ethel,Emma,Abigail,Sophie".split(',');
         
         const lastNamesRaw = "Smith,Johnson,Williams,Brown,Jones,Garcia,Miller,Davis,Rodriguez,Martinez,Hernandez,Lopez,Gonzalez,Wilson,Anderson,Thomas,Taylor,Moore,Jackson,Martin,Lee,Perez,Thompson,White,Harris,Sanchez,Clark,Ramirez,Lewis,Robinson,Walker,Young,Allen,King,Wright,Scott,Torres,Nguyen,Hill,Flores,Green,Adams,Nelson,Baker,Hall,Rivera,Campbell,Mitchell,Carter,Roberts,Gomez,Phillips,Evans,Turner,Diaz,Parker,Cruz,Edwards,Collins,Reyes,Stewart,Morris,Morales,Murphy,Cook,Rogers,Gutierrez,Ortiz,Morgan,Cooper,Peterson,Bailey,Reed,Kelly,Howard,Ramos,Kim,Cox,Ward,Richardson,Watson,Brooks,Chavez,Woods,Bennett,Gray,Mendoza,Ruiz,Hughes,Price,Alvarez,Castillo,Sanders,Patel,Myers,Long,Ross,Foster,Jimenez,Powell,Jenkins,Perry,Russell,Sullivan,Bell,Cole,Berry,Andrews,Matthews,Hayward,Mendoza,Holloway,Fisher,Collier,Davidson,Clayton,Gaines,Shepherd,Wade,Bradford,May,Barker,Daniels,Knight,Holland,Ferguson,Little,Bryant,Stone,Sanchez,Salinas,Roman,Santiago,Moss,Gibson,Wall,Rhodes,Connor,Haynes,Warren,Eaton,Neal,Love,Mendoza,McKinney,Williamson,Cho,Ford,Marsh,Orr,Higgins,Blake,George,Jensen,Obrien,Floyd,Matthews,Lambert,Hamilton,Singleton,Garrett,Carter,Travis,Grant,Hawkins,Vaughan,Holmes,Peters,Jimenez,Morrow,Shepherd,Mccoy,Griffin,Kennedy,Cummings,Walsh,Hodges,Lykins,Alvarez,Hansen,Fowler,Brewer,Hoffman,Carlson,Silva,Pearson,Holland,Douglas,Fleming,Jensen,Vargas,Byrd,Davidson,Hopkins,May, Terry, Henderson, Cole, Avery,Howard, Reyes, Collins".split(',');
@@ -375,21 +375,15 @@
             localStorage.setItem('theme', newTheme);
         }
 
-        // --- 2. TABS LOGIC (Updated) ---
+        // --- 2. TABS LOGIC ---
         function switchTab(targetId) {
-            // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
-            // Show target
             document.getElementById('tab-' + targetId).classList.add('active');
-            
-            // Set active button
             const activeBtn = document.querySelector(`.tab-btn[data-target="${targetId}"]`);
             if(activeBtn) activeBtn.classList.add('active');
         }
 
-        // Event Listeners for Tabs
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 switchTab(btn.getAttribute('data-target'));
@@ -429,7 +423,7 @@
             document.getElementById('outputCode').value = '';
         }
 
-        // --- 4. TOTP LOGIC (Web Crypto API) ---
+        // --- 4. TOTP LOGIC (FIXED: Kembali ke 30 Detik agar Valid) ---
         function base32ToBytes(base32) {
             const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
             let bits = 0, value = 0, output = [];
@@ -452,13 +446,17 @@
                 const keyBytes = base32ToBytes(secret);
                 if (keyBytes.length === 0) throw new Error("Invalid Secret");
                 const epoch = Math.floor(Date.now() / 1000);
-                const time = Math.floor(epoch / 60);
+                // DIPERBAIKI: KEMBALI KE 30 DETIK (Standar Global)
+                const time = Math.floor(epoch / 30);
+                
                 const timeBuffer = new ArrayBuffer(8);
                 const timeView = new DataView(timeBuffer);
                 timeView.setUint32(4, time, false);
+                
                 const cryptoKey = await window.crypto.subtle.importKey("raw", keyBytes, { name: "HMAC", hash: "SHA-1" }, false, ["sign"]);
                 const signature = await window.crypto.subtle.sign("HMAC", cryptoKey, timeBuffer);
                 const hmacBytes = new Uint8Array(signature);
+                
                 const offset = hmacBytes[hmacBytes.length - 1] & 0xf;
                 const binary = ((hmacBytes[offset] & 0x7f) << 24) | ((hmacBytes[offset + 1] & 0xff) << 16) | ((hmacBytes[offset + 2] & 0xff) << 8) | (hmacBytes[offset + 3] & 0xff);
                 const otp = binary % 1000000;
@@ -491,8 +489,10 @@
             outputEl.value = results.join('\n');
 
             const epoch = Math.floor(Date.now() / 1000);
-            const secondsLeft = 60 - (epoch % 60);
-            const progressPercent = (secondsLeft / 60) * 100;
+            // DIPERBAIKI: HITUNG MUNDUR 30 DETIK
+            const secondsLeft = 30 - (epoch % 30);
+            const progressPercent = (secondsLeft / 30) * 100;
+            
             progressBar.style.width = progressPercent + "%";
             timerText.innerText = `Refresh dalam ${secondsLeft} detik`;
         }
@@ -511,24 +511,16 @@
             document.getElementById('totpTimerText').innerText = "Ready";
         }
 
-        // --- 5. USERNAME GENERATOR LOGIC (UPDATED FORMAT) ---
+        // --- 5. USERNAME GENERATOR LOGIC ---
         function generateUsernames() {
-            // Input prefix dihapus
             const count = parseInt(document.getElementById('genCount').value) || 10;
             const outputEl = document.getElementById('genOutput');
 
             let results = [];
-            // Loop sesuai jumlah yang diminta
             for (let i = 0; i < count; i++) {
-                // Ambil random nama
                 const fname = firstNamesRaw[Math.floor(Math.random() * firstNamesRaw.length)].toLowerCase();
                 const lname = lastNamesRaw[Math.floor(Math.random() * lastNamesRaw.length)].toLowerCase();
-                
-                // Generate 2 digit random (00-99)
                 const randomNum = Math.floor(Math.random() * 100).toString().padStart(2, '0');
-
-                // Format Baru: firstname.lastname11
-                // Menggunakan titik (.) sebagai pemisah sesuai contoh user
                 const finalUsername = `${fname}.${lname}${randomNum}`;
                 results.push(finalUsername);
             }
