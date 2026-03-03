@@ -142,6 +142,46 @@
         
         input:focus, textarea:focus { border-color: var(--primary); }
 
+        /* --- Custom Output Box (Pengganti Textarea untuk Click per Line) --- */
+        .output-box {
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            overflow-y: auto;
+            white-space: pre-wrap; /* Biar baris baru kebaca */
+            cursor: text;
+        }
+
+        /* --- HEIGHT SYNCHRONIZATION CLASSES --- */
+        .h-135 { height: 135px; }    
+        .h-250 { height: 250px; }    
+        .h-300 { height: 300px; }    
+
+        /* Styling tiap baris */
+        .click-line {
+            padding: 2px 4px;
+            border-radius: 4px;
+            display: block;
+            cursor: pointer;
+            transition: background 0.1s, color 0.2s; /* Transisi halus untuk warna */
+        }
+        
+        /* Hover effect (Background berubah, Teks tetap) */
+        .click-line:hover {
+            background-color: var(--border);
+        }
+
+        /* PERUBAHAN: Class saat diklik. Hanya warna teks yang berubah jadi hijau */
+        .click-line.copied {
+            color: var(--success);
+            font-weight: 600; /* Opsional: sedikit menebalkan biar lebih jelas */
+        }
+
         .row { display: flex; gap: 20px; }
         .col { flex: 1; }
         @media (max-width: 768px) { .row { flex-direction: column; } }
@@ -254,7 +294,7 @@
     <div class="container">
         <!-- Navigasi Tab -->
         <nav class="tabs-nav">
-            <button class="tab-btn active" data-target="split">Split Tool</button>
+            <button class="tab-btn active" data-target="split">Merge Tool</button>
             <button class="tab-btn" data-target="totp">TOTP Generator</button>
             <button class="tab-btn" data-target="genuser">Username Gen</button>
         </nav>
@@ -263,27 +303,31 @@
         <div id="tab-split" class="tab-content active">
             <section class="card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <h3 style="margin:0;">Input Data</h3>
+                    <h3 style="margin:0;">Merge username</h3>
                     <button class="btn-secondary" onclick="clearSplit()">Reset</button>
                 </div>
                 <textarea id="inputData" rows="6" placeholder="&#10;"></textarea>
                 
                 <button class="btn-primary" style="margin-top:15px;" onclick="processData()">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                    Proses Split
+                    Proses Merge
                 </button>
             </section>
 
             <div class="output-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; @media(max-width:768px){grid-template-columns:1fr;}">
                 <section class="card">
                     <label>Username</label>
-                    <textarea id="outputUser" readonly rows="5" placeholder="Hasil username..."></textarea>
-                    <button class="btn-copy" onclick="copyToClipboard('outputUser')">Salin Username</button>
+                    <div id="outputUser" class="output-box h-135">
+                        <span class="text-muted" style="font-size:0.8rem; color:var(--text-muted);"></span>
+                    </div>
+                    <button class="btn-copy" onclick="copyAllFromDiv('outputUser')">Salin Username</button>
                 </section>
                 <section class="card">
                     <label>Secret / Key</label>
-                    <textarea id="outputCode" readonly rows="5" placeholder="Hasil secret..."></textarea>
-                    <button class="btn-copy" onclick="copyToClipboard('outputCode')">Salin Secret</button>
+                    <div id="outputCode" class="output-box h-135">
+                        <span class="text-muted" style="font-size:0.8rem; color:var(--text-muted);"></span>
+                    </div>
+                    <button class="btn-copy" onclick="copyAllFromDiv('outputCode')">Salin Secret</button>
                 </section>
             </div>
         </div>
@@ -304,7 +348,7 @@
                     <div class="col">
                         <div class="form-group">
                             <label>Input Secrets (Satu Secret Per Baris)</label>
-                            <textarea id="totpInput" rows="10" placeholder="&#10;&#10;" oninput="startAutoTOTP()"></textarea>
+                            <textarea id="totpInput" class="h-250" placeholder="&#10;&#10;" oninput="startAutoTOTP()"></textarea>
                         </div>
                         <button class="btn-danger" onclick="resetTOTP()">Reset</button>
                     </div>
@@ -312,15 +356,15 @@
                     <div class="col">
                         <div class="form-group">
                             <label>Hasil Kode (6 Digit)</label>
-                            <textarea id="totpOutput" readonly rows="10" placeholder=""></textarea>
+                            <div id="totpOutput" class="output-box h-250"></div>
                         </div>
-                        <button class="btn-copy" onclick="copyToClipboard('totpOutput')">Salin Semua Hasil</button>
+                        <button class="btn-copy" onclick="copyAllFromDiv('totpOutput')">Salin Semua Hasil</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 3: USERNAME GENERATOR (UPDATED LOGIC) -->
+        <!-- TAB 3: USERNAME GENERATOR -->
         <div id="tab-genuser" class="tab-content">
             <div class="card">
                 <h3>Generator Username </h3>
@@ -342,10 +386,12 @@
             <section class="card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <label style="margin:0;">Hasil Username</label>
-                    <button class="btn-secondary" onclick="document.getElementById('genOutput').value='';">Reset</button>
+                    <button class="btn-secondary" onclick="clearDiv('genOutput');">Reset</button>
                 </div>
-                <textarea id="genOutput" readonly rows="12" placeholder="Hasil generate akan muncul di sini...&#10;Contoh: sarah.connor45"></textarea>
-                <button class="btn-copy" onclick="copyToClipboard('genOutput')">Salin Semua Username</button>
+                <div id="genOutput" class="output-box h-300">
+                    <span style="color:var(--text-muted); font-size:0.85rem;">&#10;</span>
+                </div>
+                <button class="btn-copy" onclick="copyAllFromDiv('genOutput')">Salin Semua Username</button>
             </section>
         </div>
 
@@ -355,7 +401,7 @@
     <div id="toast">Notifikasi</div>
 
     <script>
-        // --- DATA NAMA (200+ American Female Names & Surnames) ---
+        // --- DATA NAMA ---
         const firstNamesRaw = "Emma,Olivia,Ava,Sophia,Isabella,Mia,Charlotte,Amelia,Harper,Evelyn,Abigail,Emily,Elizabeth,Sofia,Avery,Ella,Scarlett,Grace,Lily,Aria,Eleanor,Harper,Camila,Penelope,Layla,Chloe,Victoria,Madison,Eleanor,Grace,Scarlett,Nora,Riley,Violet,Luna,Zoey,Stella,Leah,Audrey,Skylar,Bella,Claire,Nora,Lydia,Vivian,Aurora,Anna,Samanara,Caroline,Genesis,Naomi,Cora,Maya,Piper,Ruby,Isla,Kinsley,Scarlett,Autumn,Paisley,Savannah,Brooklyn,Bella,Quinn,Valentina,Taylor,Clara,Kaylee,Allison,Hailey,Gianna,Isabelle,Sadie,Natalia,Lila,Leah,Sarah,Kylie,Annabelle,Addison,Claire,Stella,Naomi,Reagan,Charlie,Vivian,Peyton,Harley,Quinn,Penelope,Willow,Emery,Iris,Jade,Summer,Nora,Elise,Margaret,Mackenzie,Lydia,Hailey,Kennedi,Julia,Georgia,Leilani,Elsie,Eva,Athena,Delilah,Finley,Sadie,Maya,Milani,Harmony,Gemma,Clara,Eden,Serenity,Piper,Arabella,Sara,Valentina,Madeline,June,Josephine,Calliope,Lucy,Phoebe,Adeline,Delilah,Rose,Brielle,Summer,Kayleigh,Madelyn,Kate,Jade,Eliza,Maci,Nadia,Paige,Blakely,Kelsey,Melody,London,Paris,Genesis,Skyler,Baylee,Katrina,Miranda,Angelina,Stella,Juliana,Lauren,Kaitlyn,Nancy,Helen,Patricia,Dorothy,Linda,Barbara,Susan,Jessica,Karen,Kathryn,Ashley,Melissa,Michelle,Lisa,Nancy,Betty,Margaret,Sandra,Sharon,Brenda,Pamela,Donna,Deborah,Carol,Cynthia,Kathleen,Amy,Shirley,Angela,Helen,Anna,Rebecca,Dorothy,Judy,Rose,Janet,Diane,Alice,Julie,Heather,Teresa,Carolyn,Cherry,Eileen,Tammy,Stephanie,Rachel,Kathleen,Marie,Christina,Debra,Amanda,Joanne,Ethel,Emma,Abigail,Sophie".split(',');
         
         const lastNamesRaw = "Smith,Johnson,Williams,Brown,Jones,Garcia,Miller,Davis,Rodriguez,Martinez,Hernandez,Lopez,Gonzalez,Wilson,Anderson,Thomas,Taylor,Moore,Jackson,Martin,Lee,Perez,Thompson,White,Harris,Sanchez,Clark,Ramirez,Lewis,Robinson,Walker,Young,Allen,King,Wright,Scott,Torres,Nguyen,Hill,Flores,Green,Adams,Nelson,Baker,Hall,Rivera,Campbell,Mitchell,Carter,Roberts,Gomez,Phillips,Evans,Turner,Diaz,Parker,Cruz,Edwards,Collins,Reyes,Stewart,Morris,Morales,Murphy,Cook,Rogers,Gutierrez,Ortiz,Morgan,Cooper,Peterson,Bailey,Reed,Kelly,Howard,Ramos,Kim,Cox,Ward,Richardson,Watson,Brooks,Chavez,Woods,Bennett,Gray,Mendoza,Ruiz,Hughes,Price,Alvarez,Castillo,Sanders,Patel,Myers,Long,Ross,Foster,Jimenez,Powell,Jenkins,Perry,Russell,Sullivan,Bell,Cole,Berry,Andrews,Matthews,Hayward,Mendoza,Holloway,Fisher,Collier,Davidson,Clayton,Gaines,Shepherd,Wade,Bradford,May,Barker,Daniels,Knight,Holland,Ferguson,Little,Bryant,Stone,Sanchez,Salinas,Roman,Santiago,Moss,Gibson,Wall,Rhodes,Connor,Haynes,Warren,Eaton,Neal,Love,Mendoza,McKinney,Williamson,Cho,Ford,Marsh,Orr,Higgins,Blake,George,Jensen,Obrien,Floyd,Matthews,Lambert,Hamilton,Singleton,Garrett,Carter,Travis,Grant,Hawkins,Vaughan,Holmes,Peters,Jimenez,Morrow,Shepherd,Mccoy,Griffin,Kennedy,Cummings,Walsh,Hodges,Lykins,Alvarez,Hansen,Fowler,Brewer,Hoffman,Carlson,Silva,Pearson,Holland,Douglas,Fleming,Jensen,Vargas,Byrd,Davidson,Hopkins,May, Terry, Henderson, Cole, Avery,Howard, Reyes, Collins".split(',');
@@ -375,28 +421,50 @@
             localStorage.setItem('theme', newTheme);
         }
 
-        // --- 2. TABS LOGIC (Updated) ---
+        // --- 2. TABS LOGIC ---
         function switchTab(targetId) {
-            // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             
-            // Show target
             document.getElementById('tab-' + targetId).classList.add('active');
             
-            // Set active button
             const activeBtn = document.querySelector(`.tab-btn[data-target="${targetId}"]`);
             if(activeBtn) activeBtn.classList.add('active');
         }
 
-        // Event Listeners for Tabs
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 switchTab(btn.getAttribute('data-target'));
             });
         });
 
-        // --- 3. SPLIT TOOL LOGIC ---
+        // --- 3. HELPER FUNGSI RENDER OUTPUT (UNTUK KLIK PER BARIS) ---
+        function renderOutputLines(containerId, dataArray) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = ''; // Clear dulu
+            
+            if (!dataArray || dataArray.length === 0) {
+                container.innerHTML = '<span style="color:var(--text-muted); font-size:0.8rem;">Kosong...</span>';
+                return;
+            }
+
+            dataArray.forEach(lineText => {
+                const lineDiv = document.createElement('div');
+                lineDiv.className = 'click-line';
+                lineDiv.innerText = lineText;
+                
+                lineDiv.onclick = function() {
+                    copySingleText(lineText);
+                    // Toggle class 'copied' saat diklik
+                    // Ini akan mengubah warna teks menjadi hijau sesuai CSS
+                    this.classList.toggle('copied');
+                };
+                
+                container.appendChild(lineDiv);
+            });
+        }
+
+        // --- 4. SPLIT TOOL LOGIC ---
         function processData() {
             const rawInput = document.getElementById('inputData').value;
             if (!rawInput.trim()) return showToast("Data kosong!", "#ef4444");
@@ -418,18 +486,19 @@
                 }
             });
 
-            document.getElementById('outputUser').value = users.join('\n');
-            document.getElementById('outputCode').value = codes.join('\n');
+            renderOutputLines('outputUser', users);
+            renderOutputLines('outputCode', codes);
+            
             showToast("Data berhasil diproses!");
         }
 
         function clearSplit() {
             document.getElementById('inputData').value = '';
-            document.getElementById('outputUser').value = '';
-            document.getElementById('outputCode').value = '';
+            clearDiv('outputUser');
+            clearDiv('outputCode');
         }
 
-        // --- 4. TOTP LOGIC (Web Crypto API) ---
+        // --- 5. TOTP LOGIC ---
         function base32ToBytes(base32) {
             const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
             let bits = 0, value = 0, output = [];
@@ -469,12 +538,11 @@
         let totpInterval;
         async function runMultiTOTP() {
             const inputVal = document.getElementById('totpInput').value;
-            const outputEl = document.getElementById('totpOutput');
             const timerText = document.getElementById('totpTimerText');
             const progressBar = document.getElementById('totpProgressBar');
 
             if (!inputVal.trim()) {
-                outputEl.value = "";
+                clearDiv('totpOutput');
                 timerText.innerText = "Menunggu input...";
                 progressBar.style.width = "0%";
                 return;
@@ -488,7 +556,8 @@
                 const code = await getTOTPCode(line);
                 results.push(code);
             }
-            outputEl.value = results.join('\n');
+            
+            renderOutputLines('totpOutput', results);
 
             const epoch = Math.floor(Date.now() / 1000);
             const secondsLeft = 30 - (epoch % 30);
@@ -505,54 +574,54 @@
 
         function resetTOTP() {
             document.getElementById('totpInput').value = '';
-            document.getElementById('totpOutput').value = '';
+            clearDiv('totpOutput');
             clearInterval(totpInterval);
             document.getElementById('totpProgressBar').style.width = "0%";
             document.getElementById('totpTimerText').innerText = "Ready";
         }
 
-        // --- 5. USERNAME GENERATOR LOGIC (UPDATED FORMAT) ---
+        // --- 6. USERNAME GENERATOR LOGIC ---
         function generateUsernames() {
-            // Input prefix dihapus
             const count = parseInt(document.getElementById('genCount').value) || 10;
-            const outputEl = document.getElementById('genOutput');
-
             let results = [];
-            // Loop sesuai jumlah yang diminta
             for (let i = 0; i < count; i++) {
-                // Ambil random nama
                 const fname = firstNamesRaw[Math.floor(Math.random() * firstNamesRaw.length)].toLowerCase();
                 const lname = lastNamesRaw[Math.floor(Math.random() * lastNamesRaw.length)].toLowerCase();
-                
-                // Generate 2 digit random (00-99)
                 const randomNum = Math.floor(Math.random() * 100).toString().padStart(2, '0');
-
-                // Format Baru: firstname.lastname11
-                // Menggunakan titik (.) sebagai pemisah sesuai contoh user
                 const finalUsername = `${fname}.${lname}${randomNum}`;
                 results.push(finalUsername);
             }
 
-            outputEl.value = results.join('\n');
+            renderOutputLines('genOutput', results);
             showToast(`${count} Username berhasil dibuat!`);
         }
 
-        // --- 6. GENERAL UTILS ---
-        function copyToClipboard(id) {
-            const el = document.getElementById(id);
-            if(!el.value) return showToast("Tidak ada data!", "#ef4444");
-            el.select();
-            navigator.clipboard.writeText(el.value).then(() => showToast("Teks disalin!"));
+        // --- 7. UTILS ---
+        function copySingleText(text) {
+            if (!text) return;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(`Disalin: ${text}`);
+            }).catch(err => {
+                showToast("Gagal menyalin", "#ef4444");
+            });
         }
 
-        function showToast(msg, color) {
-            const t = document.getElementById("toast");
-            t.innerText = msg;
-            if(color) t.style.backgroundColor = color;
-            else t.style.backgroundColor = "var(--success)";
-            t.className = "show";
-            setTimeout(() => t.className = t.className.replace("show", ""), 3000);
+        function copyAllFromDiv(id) {
+            const el = document.getElementById(id);
+            const text = el.innerText.trim();
+            
+            if(!text || text === "") return showToast("", "#ef4444");
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("Semua teks berhasil disalin!");
+            });
         }
+
+        function clearDiv(id) {
+            document.getElementById(id).innerHTML = '<span style="color:var(--text-muted); font-size:0.8rem;">Kosong...</span>';
+        }
+
+        
 
         // Init
         document.addEventListener('DOMContentLoaded', () => {
