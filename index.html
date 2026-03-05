@@ -127,7 +127,8 @@
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); }
         
-        input[type="text"], input[type="number"], textarea {
+        /* UPDATE: Menambahkan select agar styling sama dengan input */
+        input[type="text"], input[type="number"], textarea, select {
             width: 100%;
             background-color: var(--input-bg);
             border: 1px solid var(--border);
@@ -140,7 +141,7 @@
             transition: border-color 0.2s;
         }
         
-        input:focus, textarea:focus { border-color: var(--primary); }
+        input:focus, textarea:focus, select:focus { border-color: var(--primary); }
 
         /* --- Custom Output Box (Pengganti Textarea untuk Click per Line) --- */
         .output-box {
@@ -364,17 +365,30 @@
             </div>
         </div>
 
-        <!-- TAB 3: USERNAME GENERATOR -->
+        <!-- TAB 3: USERNAME GENERATOR (UPDATED) -->
         <div id="tab-genuser" class="tab-content">
             <div class="card">
                 <h3>Generator Username </h3>
                 <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:15px;">
                 </p>
 
-                <!-- Hanya input jumlah -->
-                <div class="form-group">
-                    <label>Jumlah Generate</label>
-                    <input type="number" id="genCount" value="10" min="1" max="500">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label>Jumlah Generate</label>
+                            <input type="number" id="genCount" value="10" min="1" max="500">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <!-- UPDATE: Dropdown Pilihan Format -->
+                        <div class="form-group">
+                            <label>Format Username</label>
+                            <select id="genFormat">
+                                <option value="dot">.</option>
+                                <option value="underscore">_</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <button class="btn-primary" onclick="generateUsernames()">
@@ -402,10 +416,9 @@
 
     <script>
         // --- DATA NAMA ---
-        const firstNamesRaw = "Emma,Olivia,Ava,Sophia,Isabella,Mia,Charlotte,Amelia,Harper,Evelyn,Abigail,Emily,Elizabeth,Sofia,Avery,Ella,Scarlett,Grace,Lily,Aria,Eleanor,Harper,Camila,Penelope,Layla,Chloe,Victoria,Madison,Eleanor,Grace,Scarlett,Nora,Riley,Violet,Luna,Zoey,Stella,Leah,Audrey,Skylar,Bella,Claire,Nora,Lydia,Vivian,Aurora,Anna,Samanara,Caroline,Genesis,Naomi,Cora,Maya,Piper,Ruby,Isla,Kinsley,Scarlett,Autumn,Paisley,Savannah,Brooklyn,Bella,Quinn,Valentina,Taylor,Clara,Kaylee,Allison,Hailey,Gianna,Isabelle,Sadie,Natalia,Lila,Leah,Sarah,Kylie,Annabelle,Addison,Claire,Stella,Naomi,Reagan,Charlie,Vivian,Peyton,Harley,Quinn,Penelope,Willow,Emery,Iris,Jade,Summer,Nora,Elise,Margaret,Mackenzie,Lydia,Hailey,Kennedi,Julia,Georgia,Leilani,Elsie,Eva,Athena,Delilah,Finley,Sadie,Maya,Milani,Harmony,Gemma,Clara,Eden,Serenity,Piper,Arabella,Sara,Valentina,Madeline,June,Josephine,Calliope,Lucy,Phoebe,Adeline,Delilah,Rose,Brielle,Summer,Kayleigh,Madelyn,Kate,Jade,Eliza,Maci,Nadia,Paige,Blakely,Kelsey,Melody,London,Paris,Genesis,Skyler,Baylee,Katrina,Miranda,Angelina,Stella,Juliana,Lauren,Kaitlyn,Nancy,Helen,Patricia,Dorothy,Linda,Barbara,Susan,Jessica,Karen,Kathryn,Ashley,Melissa,Michelle,Lisa,Nancy,Betty,Margaret,Sandra,Sharon,Brenda,Pamela,Donna,Deborah,Carol,Cynthia,Kathleen,Amy,Shirley,Angela,Helen,Anna,Rebecca,Dorothy,Judy,Rose,Janet,Diane,Alice,Julie,Heather,Teresa,Carolyn,Cherry,Eileen,Tammy,Stephanie,Rachel,Kathleen,Marie,Christina,Debra,Amanda,Joanne,Ethel,Emma,Abigail,Sophie".split(',');
-        
-        const lastNamesRaw = "Smith,Johnson,Williams,Brown,Jones,Garcia,Miller,Davis,Rodriguez,Martinez,Hernandez,Lopez,Gonzalez,Wilson,Anderson,Thomas,Taylor,Moore,Jackson,Martin,Lee,Perez,Thompson,White,Harris,Sanchez,Clark,Ramirez,Lewis,Robinson,Walker,Young,Allen,King,Wright,Scott,Torres,Nguyen,Hill,Flores,Green,Adams,Nelson,Baker,Hall,Rivera,Campbell,Mitchell,Carter,Roberts,Gomez,Phillips,Evans,Turner,Diaz,Parker,Cruz,Edwards,Collins,Reyes,Stewart,Morris,Morales,Murphy,Cook,Rogers,Gutierrez,Ortiz,Morgan,Cooper,Peterson,Bailey,Reed,Kelly,Howard,Ramos,Kim,Cox,Ward,Richardson,Watson,Brooks,Chavez,Woods,Bennett,Gray,Mendoza,Ruiz,Hughes,Price,Alvarez,Castillo,Sanders,Patel,Myers,Long,Ross,Foster,Jimenez,Powell,Jenkins,Perry,Russell,Sullivan,Bell,Cole,Berry,Andrews,Matthews,Hayward,Mendoza,Holloway,Fisher,Collier,Davidson,Clayton,Gaines,Shepherd,Wade,Bradford,May,Barker,Daniels,Knight,Holland,Ferguson,Little,Bryant,Stone,Sanchez,Salinas,Roman,Santiago,Moss,Gibson,Wall,Rhodes,Connor,Haynes,Warren,Eaton,Neal,Love,Mendoza,McKinney,Williamson,Cho,Ford,Marsh,Orr,Higgins,Blake,George,Jensen,Obrien,Floyd,Matthews,Lambert,Hamilton,Singleton,Garrett,Carter,Travis,Grant,Hawkins,Vaughan,Holmes,Peters,Jimenez,Morrow,Shepherd,Mccoy,Griffin,Kennedy,Cummings,Walsh,Hodges,Lykins,Alvarez,Hansen,Fowler,Brewer,Hoffman,Carlson,Silva,Pearson,Holland,Douglas,Fleming,Jensen,Vargas,Byrd,Davidson,Hopkins,May, Terry, Henderson, Cole, Avery,Howard, Reyes, Collins".split(',');
+        const firstNamesRaw = "Abigail,Ada,Adeline,Agnes,Alice,Alicia,Alison,Amanda,Amber,Amelia,Amy,Andrea,Angela,Angelina,Anita,Anna,Annie,Anne,April,Ariana,Ashley,Audrey,Aurora,Barbara,Beatrice,Bella,Bernadette,Beth,Bethany,Betty,Beverly,Bianca,Blanche,Bonnie,Brenda,Brianna,Bridget,Brittany,Brooke,Brynn,Caitlin,Camila,Camille,Cara,Carla,Carole,Caroline,Carolyn,Carrie,Cassandra,Catherine,Cathy,Cecilia,Charlotte,Chelsea,Cheryl,Christina,Christine,Claire,Clara,Claudia,Colleen,Connie,Constance,Courtney,Crystal,Cynthia,Daisy,Dana,Danielle,Daphne,Deborah,Debra,Dee,Deirdre,Delilah,Diana,Diane,Dianna,Donna,Doris,Dorothy,Dora,Eden,Edith,Edwina,Eleanor,Elena,Eliana,Elise,Elizabeth,Ella,Elle,Elsa,Elsie,Emily,Emma,Emmalyn,Enid,Erin,Esme,Esther,Eva,Evelyn,Evie,Faith,Fallon,Fanny,Fatima,Felicia,Fern,Fiona,Fleur,Florence,Flora,Frances,Francesca,Freya,Frieda,Gabriella,Gail,Gayle,Gemma,Genevieve,Georgia,Georgina,Geraldine,Gertrude,Gia,Giselle,Gloria,Grace,Gracie,Graham,Greta,Gretchen,Guinevere,Gwen,Gwendolyn,Hannah,Harley,Harper,Hazel,Heather,Helen,Helena,Helene,Henrietta,Henri,Hollis,Holly,Hope,Ida,Imogen,Ingrid,Irene,Iris,Ivy,Jackie,Jade,Janelle,Jasmine,Jean,Jeannie,Jennifer,Jessica,Jo,Joanna,Joanne,Jocelyn,Jody,Johanna,Jolie,Jolene,Jordan,Josephine,Joy,Joyce,Julia,Juliet,June,Justine,Karen,Kate,Katherine,Katrina,Kay,Kayla,Keira,Kelly,Kelsey,Kendra,Kennedy,Kenna,Kerry,Kiera,Kiley,Kimberley,Kimberly,Kylie,Laura,Lauren,Lauren,Laurie,Leah,Leanne,Leila,Lena,Leona,Lesley,Leslie,Lilly,Lily,Linda,Lindsay,Lisa,Lillian,Lillie,Lorelei,Lori,Lorraine,Louise,Lucia,Lucille,Lucy,Luisa,Luna,Lydia,Lyla,Mabel,Madeline,Madeline,Madison,Maeve,Maggie,Maia,Maisie,Mallory,Mandy,Mara,Marcella,Marcia,Margaret,Maria,Marian,Marianne,Marie,Marilyn,Marion,Marjorie,Marla,Marlene,Marley,Marlo,Martha,Mary,Matilda,Maud,Maureen,Maxine,Maya,Megan,Melanie,Melinda,Melissa,Melody,Mia,Michaela,Michelle,Mikayla,Mila,Mildred,Millie,Mindy,Miranda,Moira,Molly,Monica,Morgan,Myra,Myrtle,Nadia,Nancy,Natalia,Natasha,Nell,Nellie,Nevaeh,Nichole,Nicole,Nina,Nora,Norma,Ophelia,Paige,Pamela,Patricia,Patsy,Paula,Peggy,Penelope,Phoebe,Piper,Portia,Priscilla,Quinn,Rachel,Rae,Ramona,Rebecca,Rebekah,Renee,Rhonda,Rita,Robin,Robyn,Rose,Rosemary,Rosie,Rowena,Roxanne,Ruby,Ruth,Sabrina,Sadie,Sally,Samantha,Sandra,Sara,Sarah,Sasha,Savannah,Scarlett,Selena,Serena,Sharon,Shawna,Sheila,Shirley,Sienna,Simone,Sonia,Sophie,Sophia,Stella,Stephanie,Sue,Summer,Susan,Susanna,Suzanne,Sybil,Sylvia,Tabitha,Tamara,Tanya,Tara,Taryn,Tasha,Taylor,Teresa,Tessa,Thelma,Tiffany,Tina,Tracy,Trinity,Trisha,Ursula,Valerie,Vanessa,Vera,Veronica,Victoria,Vicky,Violet,Virginia,Vivian,Vivien,Wendy,Whitney,Whitley,Willow,Winifred,Winter,Zoe,Zoey,Abbey,Abbie,Adriana,Adrienne,Afton,Agatha,Ahava,Aidan,Aileen,Aimee,Ainsley,Aisha,Aja,Alaine,Alana,Alanis,Alanna,Alayna,Alberta,Albina,Alda,Alecia,Aleen,Aleisha,Alena,Aletha,Alex,Alexa,Alexis,Alexia,Alexandria,Alfonsina,Alia,Alicia,Alida,Alina,Aline,Alisa,Alise,Alison,Alissa,Aliva,Allega,Allene,Allie,Allison,Allyn,Almeda,Almira,Aloysia,Alpha,Althea,Alva,Alverta,Alyda,Alyson,Alyssa,Amabel,Amada,Amal,Amalia,Amalie,Amanda,Amber,Ambur,Amelia,Amelie,Ami,Amie,Amilia,Amity,Ammara,Amy,Amya,Ana,Anabel,Annabelle,Analise,Anamaria,Anastasia,Andre,Andrea,Andree,Andria,Aneka,Anetta,Annette,Annika,Annis,Annora,Anny,Antionette,Antonetta,Antonette,Antonia,Antonietta,Antonina,Anuja,Anya,Aoife,April,Apryl,Ara,Arabella,Araceli,Aracelis,Aracely,Arden,Ardelle,Ardith,Aretha,Ariana,Ariane,Arianna,Ariel,Ariela,Ariella,Arla,Arlean,Arleen,Arlena,Arlene,Arleta,Arlie,Arline,Arlyne,Armanda,Arnetta,Arnette,Arnita,Arora,Arron,Aryel,Ashely,Ashlee,Ashleigh,Ashley,Ashli,Ashlie,Ashlyn,Ashtyn,Asia,Ask,Assunta,Astrid,Astra,Asuncion,Athalia,Athena,Aubine,Aubree,Aubrey,Audie,Audra,Audre,Audrey,Audrie,Audry,Augustine,Augustina,Aura,Aurea,Aurelia,Aurelie,Auria,Aurora,Austina,Autumn,Ava,Avelina,Avern,Averil,Avis,Aviva,Avril,Awilda,Axelle,Ayako,Ayana,Ayanna,Ayesha,Azalee,Azalea,Azucena".split(',');
 
+        const lastNamesRaw = "Smith,Johnson,Williams,Brown,Jones,Miller,Davis,Garcia,Rodriguez,Wilson,Martinez,Anderson,Taylor,Thomas,Moore,Jackson,Martin,Lee,Thompson,White,Harris,Clark,Lewis,Robinson,Walker,Young,Allen,King,Wright,Scott,Torres,Hill,Flores,Green,Adams,Nelson,Baker,Hall,Rivera,Campbell,Mitchell,Carter,Roberts,Gomez,Phillips,Evans,Turner,Diaz,Parker,Cruz,Edwards,Collins,Reyes,Stewart,Morris,Morales,Murphy,Cook,Rogers,Gutierrez,Ortiz,Morgan,Cooper,Peterson,Bailey,Reed,Kelly,Howard,Ramos,Kim,Cox,Ward,Richardson,Watson,Brooks,Chavez,Wood,Bennett,Gray,Mendoza,Ruiz,Hughes,Price,Alvarez,Castillo,Sanders,Patel,Myers,Long,Ross,Foster,Jimenez,Warner,Medina,Rivera,Cook,Vargas,Powell,Sullivan,Russell,Olson,Jensen,Murphy,Fisher,Ellis,Harrison,Gibson,Mcdonald,Cruz,Marshall,Ortiz,Gomez,Murray,Freeman,Wells,Webb,Simpson,Stevens,Tucker,Porter,Hunter,Hicks,Crawford,Henry,Boyd,Mason,Morales,Kennedy,Warren,Dixon,Ramos,Reyes,Burns,Gordon,Shaw,Holmes,Rice,Robertson,Hunt,Black,Daniels,Palmer,Mills,Nichols,Grant,Knight,Ferguson,Rose,Stone,Hawkins,Dunn,Perkins,Hudson,Spencer,Gardner,Stephens,Payne,Pierce,Berry,Matthews,Arnold,Wagner,Willis,Ray,Watkins,Olson,Carroll,Duncan,Snyder,Hart,Cunningham,Bradley,Lane,Andrews,Ruiz,Harper,Fox,Riley,Armstrong,Carpenter,Weaver,Greene,Lawrence,Elliott,Chavez,Sims,Austin,Peters,Kelley,Franklin,Lawson,Fields,Gutierrez,Ryan,Schmidt,Carr,Vasquez,Castillo,Wheeler,Chapman,Olivares,Montgomery,Richards,Williamson,Johnston,Banks,Meyer,Bishop,McCoy,Howell,Alvarez,Morrison,Hansen,Fernandez,Garza,Harvey,Little,Burton,Stanley,Nguyen,George,Jacobs,Reid,Kim,Fuller,Lynch,Dean,Gilbert,Garrett,Romero,Welch,Larson,Frazier,Burke,Hanson,Day,Mendoza,Moreno,Bowman,Medina,Fowler,Brewer,Hoffman,Carlson,Silva,Pearson,Holland,Douglas,Fleming,Jensen,Vargas,Byrd,Davidson,Hopkins,May,Terry,Herrera,Wade,Soto,Walters,Curtis,Neal,Caldwell,Lowe,Jennings,Barnett,Graves,Jimenez,Horton,Shelton,Barrett,OBrien,Sutton,Moon,Valenzuela,Bautista,Holt,Saunders,Shepard,Cain,McCoy,Jenson,Tate,Thornton,Baxter,Beard,Moody,Glover,Doyle,Perez,Stokes,Michael,Briggs,OConnor,Lloyd,Floyd,Pittman,Craig,Conley,Gill,Cisneros,Bean,Hinton,Puckett,Cameron,Neal,Ashley,Combs,Bond,Wyman,Kline,Chance,Wolf,Diaz,McAllister,Stark,Skinner,Lynch,Chun,Durham,Malone,Hines,Santiago,Cantu,Buckley,Goodman,Mays,Bullock,Hurst,Mullen,Kramer,Bowman,Randall,Knapp,Strong,Dickson,Middleton,Snider,Humphrey,Joyner,Hyde,Schaefer,Rodgers,Glover,Peck,McNeil,Jacobson,Zuniga,Merritt,Bolton,Blanchard,ODonnell,Sampson,Landry,Buckner,Leblanc,Kavanaugh,McLean,Kohl,McClain,Little,Shea,Kinney,Donnelly,Whitley,Winters,Melton,Merritt,Wharton,Hammett,Love,Corbett,Justice,Kirby,Weeks,Bernard,Coleman,Randolph,Mayer,Cumings,Hatfield,McCann,Yoder,Landry,Padilla,Ware,Joyner,Stein,Bowers,McDaniel,Cline,Hensley,Daugherty,Decker,Frost,Seibert,Redding,Conrad,Chandler,Yates,Fuentes,Floyd,Santana,Clay,ONeil,Haney,Hebert,Kirkland,Mathis,Quinn,Schmitt,Holder,Terrell,Pennington,Kramer,Dunlap,Hodge,Garrison,Henson,Wall,Barton,Meadows,Solis,Pacheco,Mercado,Whitley,Aguirre,McKinney,Dyer,Pugh,Conway,Vang,ONeal,McLean,Denny,Galvan,Justice,Glass,Rubio,Merritt,Powers,Haynes,Crenshaw,Vick,Schaeffer,Guthrie,Aldridge,Montoya,Boone,Sargent,Knowles,Benton,Herman,McCullough,Blevins,Kincaid,Callahan,Childers,Cowan,Branch,McKee,Fain,Wilkerson,Cherry,Wing,Kohler,Cline,Lamb,Crosby,Henson,Barlow,Lahey,Maddox,Melton,ONeal,Ritter,Skaggs,Talley,Tolbert,Tolle,Vann,Walden,Waller,Watts,Weeks,Welch,Weldon,Whaley,Wheat,Whitaker,Whitley,Wiggins,Wiley,Wilkerson,Wilkes,Wilkins,Wilkinson,Willems,Williams,Williamson,Willis,Willoughby,Wils,Wilson,Wilton,Wing,Winkler,Winston,Winter,Witt,Wolfe,Womack,Wood,Woodard,Woodbury,Woodruff,Woods,Woodward,Wooldridge,Wooley,Woolley,Workman,Worthen,Worthy,Wren,Wright,Wu,Wyatt,Wyman,Wynn,Yates,Yoder,York,Yount,Young,Younts,Yowell,Yu,Yung".split(',');
         // --- 1. THEME LOGIC ---
         function applyTheme(theme) {
             const isLight = theme === 'light';
@@ -580,27 +593,41 @@
             document.getElementById('totpTimerText').innerText = "Ready";
         }
 
-        // --- 6. USERNAME GENERATOR LOGIC ---
+        // --- 6. USERNAME GENERATOR LOGIC (UPDATED) ---
         function generateUsernames() {
             const count = parseInt(document.getElementById('genCount').value) || 10;
+            const format = document.getElementById('genFormat').value; // Ambil format: 'dot' atau 'underscore'
+            
             let results = [];
+            
             for (let i = 0; i < count; i++) {
                 const fname = firstNamesRaw[Math.floor(Math.random() * firstNamesRaw.length)].toLowerCase();
                 const lname = lastNamesRaw[Math.floor(Math.random() * lastNamesRaw.length)].toLowerCase();
-                const randomNum = Math.floor(Math.random() * 100).toString().padStart(2, '0');
-                const finalUsername = `${fname}.${lname}${randomNum}`;
+                
+                let finalUsername = "";
+
+                if (format === 'underscore') {
+                    // Format Baru: firstname_lastnameNNN (3 digit angka)
+                    const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+                    finalUsername = `${fname}_${lname}${randomNum}`;
+                } else {
+                    // Format Lama (Default): firstname.lastnameNN (2 digit angka)
+                    const randomNum = Math.floor(Math.random() * 100).toString().padStart(2, '0');
+                    finalUsername = `${fname}.${lname}${randomNum}`;
+                }
+
                 results.push(finalUsername);
             }
 
             renderOutputLines('genOutput', results);
-            showToast(`${count} Username berhasil dibuat!`);
+            showToast(`${count} sukses!`);
         }
 
         // --- 7. UTILS ---
         function copySingleText(text) {
             if (!text) return;
             navigator.clipboard.writeText(text).then(() => {
-                showToast(`Disalin: ${text}`);
+                showToast(`Disalin`);
             }).catch(err => {
                 showToast("Gagal menyalin", "#ef4444");
             });
@@ -613,7 +640,7 @@
             if(!text || text === "") return showToast("", "#ef4444");
             
             navigator.clipboard.writeText(text).then(() => {
-                showToast("Semua teks berhasil disalin!");
+                showToast("disalin!");
             });
         }
 
@@ -621,7 +648,15 @@
             document.getElementById(id).innerHTML = '<span style="color:var(--text-muted); font-size:0.8rem;">Kosong...</span>';
         }
 
-        
+        function showToast(message, bgColor) {
+            const toast = document.getElementById("toast");
+            toast.innerText = message || "Berhasil!";
+            if(bgColor) toast.style.backgroundColor = bgColor;
+            else toast.style.backgroundColor = "var(--success)";
+            
+            toast.className = "show";
+            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+        }
 
         // Init
         document.addEventListener('DOMContentLoaded', () => {
