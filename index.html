@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kramat Tools Ultimate</title>
+    <title>Kramat Tools </title>
     <style>
         /* --- CSS Variables & Theme --- */
         :root {
@@ -127,7 +127,6 @@
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); }
         
-        /* UPDATE: Menambahkan select agar styling sama dengan input */
         input[type="text"], input[type="number"], textarea, select {
             width: 100%;
             background-color: var(--input-bg);
@@ -143,7 +142,7 @@
         
         input:focus, textarea:focus, select:focus { border-color: var(--primary); }
 
-        /* --- Custom Output Box (Pengganti Textarea untuk Click per Line) --- */
+        /* --- Custom Output Box --- */
         .output-box {
             width: 100%;
             background-color: var(--input-bg);
@@ -154,7 +153,7 @@
             font-family: 'Courier New', monospace;
             font-size: 0.95rem;
             overflow-y: auto;
-            white-space: pre-wrap; /* Biar baris baru kebaca */
+            white-space: pre-wrap;
             cursor: text;
         }
 
@@ -163,24 +162,21 @@
         .h-250 { height: 250px; }    
         .h-300 { height: 300px; }    
 
-        /* Styling tiap baris */
         .click-line {
             padding: 2px 4px;
             border-radius: 4px;
             display: block;
             cursor: pointer;
-            transition: background 0.1s, color 0.2s; /* Transisi halus untuk warna */
+            transition: background 0.1s, color 0.2s;
         }
         
-        /* Hover effect (Background berubah, Teks tetap) */
         .click-line:hover {
             background-color: var(--border);
         }
 
-        /* PERUBAHAN: Class saat diklik. Hanya warna teks yang berubah jadi hijau */
         .click-line.copied {
             color: var(--success);
-            font-weight: 600; /* Opsional: sedikit menebalkan biar lebih jelas */
+            font-weight: 600;
         }
 
         .row { display: flex; gap: 20px; }
@@ -285,7 +281,7 @@
 <body>
 
     <header>
-        <h1>Kramat Tools</h1>
+        <h1>Kramat Tools <span style="font-size:0.8em; color:var(--text-muted); font-weight:normal;"></span></h1>
         <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
             <svg id="icon-sun" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
             <svg id="icon-moon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -365,30 +361,14 @@
             </div>
         </div>
 
-        <!-- TAB 3: USERNAME GENERATOR (UPDATED) -->
+        <!-- TAB 3: USERNAME GENERATOR (FORMAT RANDOM OTOMATIS) -->
         <div id="tab-genuser" class="tab-content">
             <div class="card">
                 <h3>Generator Username </h3>
-                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:15px;">
-                </p>
 
-                <div class="row">
-                    <div class="col">
-                        <div class="form-group">
-                            <label>Jumlah Generate</label>
-                            <input type="number" id="genCount" value="10" min="1" max="500">
-                        </div>
-                    </div>
-                    <div class="col">
-                        <!-- UPDATE: Dropdown Pilihan Format -->
-                        <div class="form-group">
-                            <label>Format Username</label>
-                            <select id="genFormat">
-                                <option value="dot">.</option>
-                                <option value="underscore">_</option>
-                            </select>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label>Jumlah Generate</label>
+                    <input type="number" id="genCount" value="10" min="1" max="500">
                 </div>
 
                 <button class="btn-primary" onclick="generateUsernames()">
@@ -415,10 +395,11 @@
     <div id="toast">Notifikasi</div>
 
     <script>
-        // --- DATA NAMA ---
-        const firstNamesRaw = "Abigail,Ada,Adeline,Agnes,Alice,Alicia,Alison,Amanda,Amber,Amelia,Amy,Andrea,Angela,Angelina,Anita,Anna,Annie,Anne,April,Ariana,Ashley,Audrey,Aurora,Barbara,Beatrice,Bella,Bernadette,Beth,Bethany,Betty,Beverly,Bianca,Blanche,Bonnie,Brenda,Brianna,Bridget,Brittany,Brooke,Brynn,Caitlin,Camila,Camille,Cara,Carla,Carole,Caroline,Carolyn,Carrie,Cassandra,Catherine,Cathy,Cecilia,Charlotte,Chelsea,Cheryl,Christina,Christine,Claire,Clara,Claudia,Colleen,Connie,Constance,Courtney,Crystal,Cynthia,Daisy,Dana,Danielle,Daphne,Deborah,Debra,Dee,Deirdre,Delilah,Diana,Diane,Dianna,Donna,Doris,Dorothy,Dora,Eden,Edith,Edwina,Eleanor,Elena,Eliana,Elise,Elizabeth,Ella,Elle,Elsa,Elsie,Emily,Emma,Emmalyn,Enid,Erin,Esme,Esther,Eva,Evelyn,Evie,Faith,Fallon,Fanny,Fatima,Felicia,Fern,Fiona,Fleur,Florence,Flora,Frances,Francesca,Freya,Frieda,Gabriella,Gail,Gayle,Gemma,Genevieve,Georgia,Georgina,Geraldine,Gertrude,Gia,Giselle,Gloria,Grace,Gracie,Graham,Greta,Gretchen,Guinevere,Gwen,Gwendolyn,Hannah,Harley,Harper,Hazel,Heather,Helen,Helena,Helene,Henrietta,Henri,Hollis,Holly,Hope,Ida,Imogen,Ingrid,Irene,Iris,Ivy,Jackie,Jade,Janelle,Jasmine,Jean,Jeannie,Jennifer,Jessica,Jo,Joanna,Joanne,Jocelyn,Jody,Johanna,Jolie,Jolene,Jordan,Josephine,Joy,Joyce,Julia,Juliet,June,Justine,Karen,Kate,Katherine,Katrina,Kay,Kayla,Keira,Kelly,Kelsey,Kendra,Kennedy,Kenna,Kerry,Kiera,Kiley,Kimberley,Kimberly,Kylie,Laura,Lauren,Lauren,Laurie,Leah,Leanne,Leila,Lena,Leona,Lesley,Leslie,Lilly,Lily,Linda,Lindsay,Lisa,Lillian,Lillie,Lorelei,Lori,Lorraine,Louise,Lucia,Lucille,Lucy,Luisa,Luna,Lydia,Lyla,Mabel,Madeline,Madeline,Madison,Maeve,Maggie,Maia,Maisie,Mallory,Mandy,Mara,Marcella,Marcia,Margaret,Maria,Marian,Marianne,Marie,Marilyn,Marion,Marjorie,Marla,Marlene,Marley,Marlo,Martha,Mary,Matilda,Maud,Maureen,Maxine,Maya,Megan,Melanie,Melinda,Melissa,Melody,Mia,Michaela,Michelle,Mikayla,Mila,Mildred,Millie,Mindy,Miranda,Moira,Molly,Monica,Morgan,Myra,Myrtle,Nadia,Nancy,Natalia,Natasha,Nell,Nellie,Nevaeh,Nichole,Nicole,Nina,Nora,Norma,Ophelia,Paige,Pamela,Patricia,Patsy,Paula,Peggy,Penelope,Phoebe,Piper,Portia,Priscilla,Quinn,Rachel,Rae,Ramona,Rebecca,Rebekah,Renee,Rhonda,Rita,Robin,Robyn,Rose,Rosemary,Rosie,Rowena,Roxanne,Ruby,Ruth,Sabrina,Sadie,Sally,Samantha,Sandra,Sara,Sarah,Sasha,Savannah,Scarlett,Selena,Serena,Sharon,Shawna,Sheila,Shirley,Sienna,Simone,Sonia,Sophie,Sophia,Stella,Stephanie,Sue,Summer,Susan,Susanna,Suzanne,Sybil,Sylvia,Tabitha,Tamara,Tanya,Tara,Taryn,Tasha,Taylor,Teresa,Tessa,Thelma,Tiffany,Tina,Tracy,Trinity,Trisha,Ursula,Valerie,Vanessa,Vera,Veronica,Victoria,Vicky,Violet,Virginia,Vivian,Vivien,Wendy,Whitney,Whitley,Willow,Winifred,Winter,Zoe,Zoey,Abbey,Abbie,Adriana,Adrienne,Afton,Agatha,Ahava,Aidan,Aileen,Aimee,Ainsley,Aisha,Aja,Alaine,Alana,Alanis,Alanna,Alayna,Alberta,Albina,Alda,Alecia,Aleen,Aleisha,Alena,Aletha,Alex,Alexa,Alexis,Alexia,Alexandria,Alfonsina,Alia,Alicia,Alida,Alina,Aline,Alisa,Alise,Alison,Alissa,Aliva,Allega,Allene,Allie,Allison,Allyn,Almeda,Almira,Aloysia,Alpha,Althea,Alva,Alverta,Alyda,Alyson,Alyssa,Amabel,Amada,Amal,Amalia,Amalie,Amanda,Amber,Ambur,Amelia,Amelie,Ami,Amie,Amilia,Amity,Ammara,Amy,Amya,Ana,Anabel,Annabelle,Analise,Anamaria,Anastasia,Andre,Andrea,Andree,Andria,Aneka,Anetta,Annette,Annika,Annis,Annora,Anny,Antionette,Antonetta,Antonette,Antonia,Antonietta,Antonina,Anuja,Anya,Aoife,April,Apryl,Ara,Arabella,Araceli,Aracelis,Aracely,Arden,Ardelle,Ardith,Aretha,Ariana,Ariane,Arianna,Ariel,Ariela,Ariella,Arla,Arlean,Arleen,Arlena,Arlene,Arleta,Arlie,Arline,Arlyne,Armanda,Arnetta,Arnette,Arnita,Arora,Arron,Aryel,Ashely,Ashlee,Ashleigh,Ashley,Ashli,Ashlie,Ashlyn,Ashtyn,Asia,Ask,Assunta,Astrid,Astra,Asuncion,Athalia,Athena,Aubine,Aubree,Aubrey,Audie,Audra,Audre,Audrey,Audrie,Audry,Augustine,Augustina,Aura,Aurea,Aurelia,Aurelie,Auria,Aurora,Austina,Autumn,Ava,Avelina,Avern,Averil,Avis,Aviva,Avril,Awilda,Axelle,Ayako,Ayana,Ayanna,Ayesha,Azalee,Azalea,Azucena".split(',');
+        // --- DATA NAMA (500+ ENTRIES) ---
+        const firstNamesRaw = "Adelheid,Agnes,Albertine,Almut,Aloisia,Alwine,Amalie,Anastasia,Anett,Anette,Anja,Anke,Annegret,Annemarie,Annerose,Anneliese,Angelika,Astrid,Beate,Bernadette,Bettina,Bianca,Birgit,Brigitte,Carola,Charlotte,Christa,Christiane,Claudia,Corinna,Dagmar,Daniela,Doris,Dorothea,Ebba,Edelgard,Edeltraut,Edda,Eike,Elfriede,Eleonore,Elisabeth,Elke,Ella,Elsa,Elsbeth,Elvira,Emilie,Erika,Ernestine,Esther,Eva,Evelin,Evelyne,Fabienne,Felicitas,Franziska,Frauke,Frederike,Frieda,Friederike,Gabriela,Gisela,Gudrun,Gundula,Gunhild,Günhild,Hannah,Helga,Hella,Helene,Henriette,Henrike,Hildegard,Hilde,Hubertine,Hulda,Ida,Ilona,Ina,Inge,Ingeborg,Ingrid,Irmgard,Irma,Isolde,Jacqueline,Jana,Janine,Jasmin,Jeanette,Jennifer,Jenny,Jessica,Joana,Johanna,Jolanda,Josefa,Josefine,Judith,Julia,Juliane,Julienne,Jutta,Karen,Karin,Karla,Karolina,Karoline,Katja,Katrin,Kerstin,Klaudia,Kristin,Krystyna,Laura,Lea,Lena,Leni,Leonie,Liesel,Lieselotte,Lisa,Ljudmila,Lore,Luise,Magdalena,Maike,Mandy,Manuela,Mara,Mareike,Margarete,Margaretha,Margot,Maria,Marianne,Maribel,Marion,Marlene,Martina,Mathilde,Mechthild,Meike,Melanie,Michaela,Michelle,Miriam,Mirjam,Mona,Monika,Nadine,Nadja,Nancy,Natalie,Natascha,Nelli,Nicole,Nina,Nora,Olga,Patricia,Paula,Penelope,Petra,Pia,Ramona,Rebecca,Regine,Renate,Ricarda,Rita,Rosa,Rosalie,Rosemarie,Rosina,Roxana,Sabine,Sandra,Sibylle,Sigrid,Silke,Simone,Sophie,Stefanie,Steffi,Stephanie,Susan,Susanne,Svenja,Sybille,Tamara,Tania,Tanja,Theresa,Tine,Tina,Traudel,Ulrike,Uta,Valentina,Vanessa,Vera,Verena,Victoria,Viktoria,Viola,Violetta,Virginia,Viviane,Walburga,Wanda,Wendy,Wiebke,Wilhelmine,Xena,Yvonne,Zarah,Zofia,Abigail,Ada,Adeline,Amy,Alicia,Alison,Amanda,Amber,Amelia,Angela,Angelina,Anita,Anna,Annie,Anne,April,Ariana,Ashley,Audrey,Aurora,Barbara,Beatrice,Bella,Bernadette,Beth,Bethany,Betty,Beverly,Bianca,Blanche,Bonnie,Brenda,Brianna,Bridget,Brittany,Brooke,Brynn,Caitlin,Camila,Camille,Cara,Carla,Carole,Caroline,Carolyn,Carrie,Cassandra,Catherine,Cathy,Cecilia,Charlotte,Chelsea,Cheryl,Christina,Christine,Claire,Clara,Claudia,Colleen,Connie,Constance,Courtney,Crystal,Cynthia,Daisy,Dana,Danielle,Daphne,Deborah,Debra,Dee,Deirdre,Delilah,Diana,Diane,Dianna,Donna,Doris,Dorothy,Dora,Eden,Edith,Edwina,Eleanor,Elena,Eliana,Elise,Elizabeth,Ella,Elle,Elsa,Elsie,Emily,Emma,Emmalyn,Enid,Erin,Esme,Esther,Eva,Evelyn,Evie,Faith,Fallon,Fanny,Fatima,Felicia,Fern,Fiona,Fleur,Florence,Flora,Frances,Francesca,Freya,Frieda,Gabriella,Gail,Gayle,Gemma,Genevieve,Georgia,Georgina,Geraldine,Gertrude,Gia,Giselle,Gloria,Grace,Gracie,Graham,Greta,Gretchen,Guinevere,Gwen,Gwendolyn,Harley,Harper,Hazel,Heather,Helen,Helena,Helene,Henrietta,Henri,Hollis,Holly,Hope,Imogen,Ingrid,Irene,Iris,Ivy,Jackie,Jade,Janelle,Jasmine,Jean,Jeannie,Jennifer,Jessica,Jo,Joanna,Joanne,Jocelyn,Jody,Johanna,Jolie,Jolene,Jordan,Josephine,Joy,Joyce,Julia,Juliet,June,Justine,Kate,Katherine,Katrina,Kay,Kayla,Keira,Kelly,Kelsey,Kendra,Kennedy,Kenna,Kerry,Kiera,Kiley,Kimberley,Kimberly,Kylie,Laura,Lauren,Lauren,Laurie,Leah,Leanne,Leila,Lena,Leona,Lesley,Leslie,Lilly,Lily,Linda,Lindsay,Lisa,Lillian,Lillie,Lorelei,Lori,Lorraine,Louise,Lucia,Lucille,Lucy,Luisa,Luna,Lydia,Lyla,Mabel,Madeline,Madeline,Madison,Maeve,Maggie,Maia,Maisie,Mallory,Mandy,Mara,Marcella,Marcia,Margaret,Maria,Marian,Marianne,Marie,Marilyn,Marion,Marjorie,Marla,Marlene,Marley,Marlo,Martha,Mary,Matilda,Maud,Maureen,Maxine,Maya,Megan,Melanie,Melinda,Melissa,Melody,Mia,Michaela,Michelle,Mikayla,Mila,Mildred,Millie,Mindy,Miranda,Moira,Molly,Monica,Morgan,Myra,Myrtle,Nadia,Nancy,Natalia,Natasha,Nell,Nellie,Nevaeh,Nichole,Nicole,Nina,Nora,Norma,Ophelia,Paige,Pamela,Patricia,Patsy,Paula,Peggy,Penelope,Phoebe,Piper,Portia,Priscilla,Quinn,Rachel,Rae,Ramona,Rebecca,Rebekah,Renee,Rhonda,Rita,Robin,Robyn,Rose,Rosemary,Rosie,Rowena,Roxanne,Ruby,Ruth,Sabrina,Sadie,Sally,Samantha,Sandra,Sara,Sarah,Sasha,Savannah,Scarlett,Selena,Serena,Sharon,Shawna,Sheila,Shirley,Sienna,Simone,Sonia,Sophie,Sophia,Stella,Stephanie,Sue,Summer,Susan,Susanna,Suzanne,Sybil,Sylvia,Tabitha,Tamara,Tanya,Tara,Taryn,Tasha,Taylor,Teresa,Tessa,Thelma,Tiffany,Tina,Tracy,Trinity,Trisha,Ursula,Valerie,Vanessa,Vera,Veronica,Victoria,Vicky,Violet,Virginia,Vivian,Vivien,Wendy,Whitney,Whitley,Willow,Winifred,Winter,Zoe,Zoey,Abbey,Abbie,Adriana,Adrienne,Afton,Agatha,Ahava,Aidan,Aileen,Aimee,Ainsley,Aisha,Aja,Alaine,Alana,Alanis,Alanna,Alayna,Alberta,Albina,Alda,Alecia,Aleen,Aleisha,Alena,Aletha,Alex,Alexa,Alexis,Alexia,Alexandria,Alfonsina,Alia,Alicia,Alida,Alina,Aline,Alisa,Alise,Alison,Alissa,Aliva,Allega,Allene,Allie,Allison,Allyn,Almeda,Almira,Aloysia,Alpha,Althea,Alva,Alverta,Alyda,Alyson,Alyssa,Amabel,Amada,Amal,Amalia,Amalie,Amanda,Amber,Ambur,Amelia,Amelie,Ami,Amie,Amilia,Amity,Ammara,Amy,Amya,Ana,Anabel,Annabelle,Analise,Anamaria,Anastasia,Andre,Andrea,Andree,Andria,Aneka,Anetta,Annette,Annika,Annis,Annora,Anny,Antionette,Antonetta,Antonette,Antonia,Antonietta,Antonina,Anuja,Anya,Aoife,April,Apryl,Ara,Arabella,Araceli,Aracelis,Aracely,Arden,Ardelle,Ardith,Aretha,Ariana,Ariane,Arianna,Ariel,Ariela,Ariella,Arla,Arlean,Arleen,Arlena,Arlene,Arleta,Arlie,Arline,Arlyne,Armanda,Arnetta,Arnette,Arnita,Arora,Arron,Aryel,Ashely,Ashlee,Ashleigh,Ashley,Ashli,Ashlie,Ashlyn,Ashtyn,Asia,Ask,Assunta,Astrid,Astra,Asuncion,Athalia,Athena,Aubine,Aubree,Aubrey,Audie,Audra,Audre,Audrey,Audrie,Audry,Augustine,Augustina,Aura,Aurea,Aurelia,Aurelie,Auria,Aurora,Austina,Autumn,Ava,Avelina,Avern,Averil,Avis,Aviva,Avril,Awilda,Axelle,Ayako,Ayana,Ayanna,Ayesha,Azalee,Azalea,Azucena,Mueller,Smith,Johnson,Williams,Brown,Jones,Miller,Davis,Garcia,Rodriguez,Wilson,Martinez,Anderson,Taylor,Thomas,Moore,Jackson,Martin,Lee,Thompson,White,Harris,Clark,Lewis,Robinson,Walker,Young,Allen,King,Wright,Scott,Torres,Hill,Flores,Green,Adams,Nelson,Baker,Hall,Rivera,Campbell,Mitchell,Carter,Roberts,Gomez,Phillips,Evans,Turner,Diaz,Parker,Cruz,Edwards,Collins,Reyes,Stewart,Morris,Morales,Murphy,Cook,Rogers,Gutierrez,Ortiz,Morgan,Cooper,Peterson,Bailey,Reed,Kelly,Howard,Ramos,Kim,Cox,Ward,Richardson,Watson,Brooks,Chavez,Wood,Bennett,Gray,Mendoza,Ruiz,Hughes,Price,Alvarez,Castillo,Sanders,Patel,Myers,Long,Ross,Foster,Jimenez,Warner,Medina,Rivera,Cook,Vargas,Powell,Sullivan,Russell,Olson,Jensen,Murphy,Fisher,Ellis,Harrison,Gibson,Mcdonald,Cruz,Marshall,Ortiz,Gomez,Murray,Freeman,Wells,Webb,Simpson,Stevens,Tucker,Porter,Hunter,Hicks,Crawford,Henry,Boyd,Mason,Morales,Kennedy,Warren,Dixon,Ramos,Reyes,Burns,Gordon,Shaw,Holmes,Rice,Robertson,Hunt,Black,Daniels,Palmer,Mills,Nichols,Grant,Knight,Ferguson,Rose,Stone,Hawkins,Dunn,Perkins,Hudson,Spencer,Gardner,Stephens,Payne,Pierce,Berry,Matthews,Arnold,Wagner,Willis,Ray,Watkins,Olson,Carroll,Duncan,Snyder,Hart,Cunningham,Bradley,Lane,Andrews,Ruiz,Harper,Fox,Riley,Armstrong,Carpenter,Weaver,Greene,Lawrence,Elliott,Chavez,Sims,Austin,Peters,Kelley,Franklin,Lawson,Fields,Gutierrez,Ryan,Schmidt,Carr,Vasquez,Castillo,Wheeler,Chapman,Olivares,Montgomery,Richards,Williamson,Johnston,Banks,Meyer,Bishop,McCoy,Howell,Alvarez,Morrison,Hansen,Fernandez,Garza,Harvey,Little,Burton,Stanley,Nguyen,George,Jacobs,Reid,Kim,Fuller,Lynch,Dean,Gilbert,Garrett,Romero,Welch,Larson,Frazier,Burke,Hanson,Day,Mendoza,Moreno,Bowman,Medina,Fowler,Brewer,Hoffman,Carlson,Silva,Pearson,Holland,Douglas,Fleming,Jensen,Vargas,Byrd,Davidson,Hopkins,May,Terry,Herrera,Wade,Soto,Walters,Curtis,Neal,Caldwell,Lowe,Jennings,Barnett,Graves,Jimenez,Horton,Shelton,Barrett,OBrien,Sutton,Moon,Valenzuela,Bautista,Holt,Saunders,Shepard,Cain,McCoy,Jenson,Tate,Thornton,Baxter,Beard,Moody,Glover,Doyle,Perez,Stokes,Michael,Briggs,OConnor,Lloyd,Floyd,Pittman,Craig,Conley,Gill,Cisneros,Bean,Hinton,Puckett,Cameron,Neal,Ashley,Combs,Bond,Wyman,Kline,Chance,Wolf,Diaz,McAllister,Stark,Skinner,Lynch,Chun,Durham,Malone,Hines,Santiago,Cantu,Buckley,Goodman,Mays,Bullock,Hurst,Mullen,Kramer,Bowman,Randall,Knapp,Strong,Dickson,Middleton,Snider,Humphrey,Joyner,Hyde,Schaefer,Rodgers,Glover,Peck,McNeil,Jacobson,Zuniga,Merritt,Bolton,Blanchard,ODonnell,Sampson,Landry,Buckner,Leblanc,Kavanaugh,McLean,Kohl,McClain,Little,Shea,Kinney,Donnelly,Whitley,Winters,Melton,Merritt,Wharton,Hammett,Love,Corbett,Justice,Kirby,Weeks,Bernard,Coleman,Randolph,Mayer,Cumings,Hatfield,McCann,Yoder,Landry,Padilla,Ware,Joyner,Stein,Bowers,McDaniel,Cline,Hensley,Daugherty,Decker,Frost,Seibert,Redding,Conrad,Chandler,Yates,Fuentes,Floyd,Santana,Clay,ONeil,Haney,Hebert,Kirkland,Mathis,Quinn,Schmitt,Holder,Terrell,Pennington,Kramer,Dunlap,Hodge,Garrison,Henson,Wall,Barton,Meadows,Solis,Pacheco,Mercado,Whitley,Aguirre,McKinney,Dyer,Pugh,Conway,Vang,ONeal,McLean,Denny,Galvan,Justice,Glass,Rubio,Merritt,Powers,Haynes,Crenshaw,Vick,Schaeffer,Guthrie,Aldridge,Montoya,Boone,Sargent,Knowles,Benton,Herman,McCullough,Blevins,Kincaid,Callahan,Childers,Cowan,Branch,McKee,Fain,Wilkerson,Cherry,Wing,Kohler,Cline,Lamb,Crosby,Henson,Barlow,Lahey,Maddox,Melton,ONeal,Ritter,Skaggs,Talley,Tolbert,Tolle,Vann,Walden,Waller,Watts,Weeks,Welch,Weldon,Whaley,Wheat,Whitaker,Whitley,Wiggins,Wiley,Wilkerson,Wilkes,Wilkins,Wilkinson,Willems,Williams,Williamson,Willis,Willoughby,Wils,Wilson,Wilton,Wing,Winkler,Winston,Winter,Witt,Wolfe,Womack,Wood,Woodard,Woodbury,Woodruff,Woods,Woodward,Wooldridge,Wooley,Woolley,Workman,Worthen,Worthy,Wren,Wright,Wu,Wyatt,Wyman,Wynn,Yates,Yoder,York,Yount,Young,Younts,Yowell,Yu,Yung".split(',');
 
-        const lastNamesRaw = "Smith,Johnson,Williams,Brown,Jones,Miller,Davis,Garcia,Rodriguez,Wilson,Martinez,Anderson,Taylor,Thomas,Moore,Jackson,Martin,Lee,Thompson,White,Harris,Clark,Lewis,Robinson,Walker,Young,Allen,King,Wright,Scott,Torres,Hill,Flores,Green,Adams,Nelson,Baker,Hall,Rivera,Campbell,Mitchell,Carter,Roberts,Gomez,Phillips,Evans,Turner,Diaz,Parker,Cruz,Edwards,Collins,Reyes,Stewart,Morris,Morales,Murphy,Cook,Rogers,Gutierrez,Ortiz,Morgan,Cooper,Peterson,Bailey,Reed,Kelly,Howard,Ramos,Kim,Cox,Ward,Richardson,Watson,Brooks,Chavez,Wood,Bennett,Gray,Mendoza,Ruiz,Hughes,Price,Alvarez,Castillo,Sanders,Patel,Myers,Long,Ross,Foster,Jimenez,Warner,Medina,Rivera,Cook,Vargas,Powell,Sullivan,Russell,Olson,Jensen,Murphy,Fisher,Ellis,Harrison,Gibson,Mcdonald,Cruz,Marshall,Ortiz,Gomez,Murray,Freeman,Wells,Webb,Simpson,Stevens,Tucker,Porter,Hunter,Hicks,Crawford,Henry,Boyd,Mason,Morales,Kennedy,Warren,Dixon,Ramos,Reyes,Burns,Gordon,Shaw,Holmes,Rice,Robertson,Hunt,Black,Daniels,Palmer,Mills,Nichols,Grant,Knight,Ferguson,Rose,Stone,Hawkins,Dunn,Perkins,Hudson,Spencer,Gardner,Stephens,Payne,Pierce,Berry,Matthews,Arnold,Wagner,Willis,Ray,Watkins,Olson,Carroll,Duncan,Snyder,Hart,Cunningham,Bradley,Lane,Andrews,Ruiz,Harper,Fox,Riley,Armstrong,Carpenter,Weaver,Greene,Lawrence,Elliott,Chavez,Sims,Austin,Peters,Kelley,Franklin,Lawson,Fields,Gutierrez,Ryan,Schmidt,Carr,Vasquez,Castillo,Wheeler,Chapman,Olivares,Montgomery,Richards,Williamson,Johnston,Banks,Meyer,Bishop,McCoy,Howell,Alvarez,Morrison,Hansen,Fernandez,Garza,Harvey,Little,Burton,Stanley,Nguyen,George,Jacobs,Reid,Kim,Fuller,Lynch,Dean,Gilbert,Garrett,Romero,Welch,Larson,Frazier,Burke,Hanson,Day,Mendoza,Moreno,Bowman,Medina,Fowler,Brewer,Hoffman,Carlson,Silva,Pearson,Holland,Douglas,Fleming,Jensen,Vargas,Byrd,Davidson,Hopkins,May,Terry,Herrera,Wade,Soto,Walters,Curtis,Neal,Caldwell,Lowe,Jennings,Barnett,Graves,Jimenez,Horton,Shelton,Barrett,OBrien,Sutton,Moon,Valenzuela,Bautista,Holt,Saunders,Shepard,Cain,McCoy,Jenson,Tate,Thornton,Baxter,Beard,Moody,Glover,Doyle,Perez,Stokes,Michael,Briggs,OConnor,Lloyd,Floyd,Pittman,Craig,Conley,Gill,Cisneros,Bean,Hinton,Puckett,Cameron,Neal,Ashley,Combs,Bond,Wyman,Kline,Chance,Wolf,Diaz,McAllister,Stark,Skinner,Lynch,Chun,Durham,Malone,Hines,Santiago,Cantu,Buckley,Goodman,Mays,Bullock,Hurst,Mullen,Kramer,Bowman,Randall,Knapp,Strong,Dickson,Middleton,Snider,Humphrey,Joyner,Hyde,Schaefer,Rodgers,Glover,Peck,McNeil,Jacobson,Zuniga,Merritt,Bolton,Blanchard,ODonnell,Sampson,Landry,Buckner,Leblanc,Kavanaugh,McLean,Kohl,McClain,Little,Shea,Kinney,Donnelly,Whitley,Winters,Melton,Merritt,Wharton,Hammett,Love,Corbett,Justice,Kirby,Weeks,Bernard,Coleman,Randolph,Mayer,Cumings,Hatfield,McCann,Yoder,Landry,Padilla,Ware,Joyner,Stein,Bowers,McDaniel,Cline,Hensley,Daugherty,Decker,Frost,Seibert,Redding,Conrad,Chandler,Yates,Fuentes,Floyd,Santana,Clay,ONeil,Haney,Hebert,Kirkland,Mathis,Quinn,Schmitt,Holder,Terrell,Pennington,Kramer,Dunlap,Hodge,Garrison,Henson,Wall,Barton,Meadows,Solis,Pacheco,Mercado,Whitley,Aguirre,McKinney,Dyer,Pugh,Conway,Vang,ONeal,McLean,Denny,Galvan,Justice,Glass,Rubio,Merritt,Powers,Haynes,Crenshaw,Vick,Schaeffer,Guthrie,Aldridge,Montoya,Boone,Sargent,Knowles,Benton,Herman,McCullough,Blevins,Kincaid,Callahan,Childers,Cowan,Branch,McKee,Fain,Wilkerson,Cherry,Wing,Kohler,Cline,Lamb,Crosby,Henson,Barlow,Lahey,Maddox,Melton,ONeal,Ritter,Skaggs,Talley,Tolbert,Tolle,Vann,Walden,Waller,Watts,Weeks,Welch,Weldon,Whaley,Wheat,Whitaker,Whitley,Wiggins,Wiley,Wilkerson,Wilkes,Wilkins,Wilkinson,Willems,Williams,Williamson,Willis,Willoughby,Wils,Wilson,Wilton,Wing,Winkler,Winston,Winter,Witt,Wolfe,Womack,Wood,Woodard,Woodbury,Woodruff,Woods,Woodward,Wooldridge,Wooley,Woolley,Workman,Worthen,Worthy,Wren,Wright,Wu,Wyatt,Wyman,Wynn,Yates,Yoder,York,Yount,Young,Younts,Yowell,Yu,Yung".split(',');
+        const lastNamesRaw = "Muller,Schmidt,Schneider,Fischer,Weber,Meyer,Wagner,Becker,Schulz,Hoffmann,Koch,Richter,Klein,Wolf,Schroder,Neumann,Schwarz,Braun,Zimmermann,Kruger,Lange,Meier,Wagner,Beck,Hoffmann,Kramer,Peter,Schubert,Martin,Jung,Hahn,Schmid,Vetter,Roth,Berger,Thomas,Wolf,Winkler,Koch,Bauer,Richter,Klein,Kruger,Schroder,Neumann,Schwarz,Brahm,Zimmermann,Kramer,Peter,Schubert,Martin,Roth,Berger,Otto,Sommer,Lohmann,Lehmann,Esch,Kuhn,Jager,Frank,Link,Busch,Bartsch,Heller,Scholz,Ludwig,Beier,Gunther,Hartmann,Lange,Schmitt,Krause,Werner,Schmitz,Krause,Klein,Bohm,Dietrich,Kuhn,Fuchs,Keller,Jung,Hahn,Schmid,Vetter,Roth,Berger,Smith,Johnson,Williams,Brown,Jones,Miller,Davis,Garcia,Rodriguez,Wilson,Martinez,Anderson,Taylor,Thomas,Moore,Jackson,Martin,Lee,Thompson,White,Harris,Clark,Lewis,Robinson,Walker,Young,Allen,King,Wright,Scott,Torres,Hill,Flores,Green,Adams,Nelson,Baker,Hall,Rivera,Campbell,Mitchell,Carter,Roberts,Gomez,Phillips,Evans,Turner,Diaz,Parker,Cruz,Edwards,Collins,Reyes,Stewart,Morris,Morales,Murphy,Cook,Rogers,Gutierrez,Ortiz,Morgan,Cooper,Peterson,Bailey,Reed,Kelly,Howard,Ramos,Kim,Cox,Ward,Richardson,Watson,Brooks,Chavez,Wood,Bennett,Gray,Mendoza,Ruiz,Hughes,Price,Alvarez,Castillo,Sanders,Patel,Myers,Long,Ross,Foster,Jimenez,Warner,Medina,Rivera,Cook,Vargas,Powell,Sullivan,Russell,Olson,Jensen,Murphy,Fisher,Ellis,Harrison,Gibson,Mcdonald,Cruz,Marshall,Ortiz,Gomez,Murray,Freeman,Wells,Webb,Simpson,Stevens,Tucker,Porter,Hunter,Hicks,Crawford,Henry,Boyd,Mason,Morales,Kennedy,Warren,Dixon,Ramos,Reyes,Burns,Gordon,Shaw,Holmes,Rice,Robertson,Hunt,Black,Daniels,Palmer,Mills,Nichols,Grant,Knight,Ferguson,Rose,Stone,Hawkins,Dunn,Perkins,Hudson,Spencer,Gardner,Stephens,Payne,Pierce,Berry,Matthews,Arnold,Wagner,Willis,Ray,Watkins,Olson,Carroll,Duncan,Snyder,Hart,Cunningham,Bradley,Lane,Andrews,Ruiz,Harper,Fox,Riley,Armstrong,Carpenter,Weaver,Greene,Lawrence,Elliott,Chavez,Sims,Austin,Peters,Kelley,Franklin,Lawson,Fields,Gutierrez,Ryan,Schmidt,Carr,Vasquez,Castillo,Wheeler,Chapman,Olivares,Montgomery,Richards,Williamson,Johnston,Banks,Meyer,Bishop,McCoy,Howell,Alvarez,Morrison,Hansen,Fernandez,Garza,Harvey,Little,Burton,Stanley,Nguyen,George,Jacobs,Reid,Kim,Fuller,Lynch,Dean,Gilbert,Garrett,Romero,Welch,Larson,Frazier,Burke,Hanson,Day,Mendoza,Moreno,Bowman,Medina,Fowler,Brewer,Hoffman,Carlson,Silva,Pearson,Holland,Douglas,Fleming,Jensen,Vargas,Byrd,Davidson,Hopkins,May,Terry,Herrera,Wade,Soto,Walters,Curtis,Neal,Caldwell,Lowe,Jennings,Barnett,Graves,Jimenez,Horton,Shelton,Barrett,OBrien,Sutton,Moon,Valenzuela,Bautista,Holt,Saunders,Shepard,Cain,McCoy,Jenson,Tate,Thornton,Baxter,Beard,Moody,Glover,Doyle,Perez,Stokes,Michael,Briggs,OConnor,Lloyd,Floyd,Pittman,Craig,Conley,Gill,Cisneros,Bean,Hinton,Puckett,Cameron,Neal,Ashley,Combs,Bond,Wyman,Kline,Chance,Wolf,Diaz,McAllister,Stark,Skinner,Lynch,Chun,Durham,Malone,Hines,Santiago,Cantu,Buckley,Goodman,Mays,Bullock,Hurst,Mullen,Kramer,Bowman,Randall,Knapp,Strong,Dickson,Middleton,Snider,Humphrey,Joyner,Hyde,Schaefer,Rodgers,Glover,Peck,McNeil,Jacobson,Zuniga,Merritt,Bolton,Blanchard,ODonnell,Sampson,Landry,Buckner,Leblanc,Kavanaugh,McLean,Kohl,McClain,Little,Shea,Kinney,Donnelly,Whitley,Winters,Melton,Merritt,Wharton,Hammett,Love,Corbett,Justice,Kirby,Weeks,Bernard,Coleman,Randolph,Mayer,Cumings,Hatfield,McCann,Yoder,Landry,Padilla,Ware,Joyner,Stein,Bowers,McDaniel,Cline,Hensley,Daugherty,Decker,Frost,Seibert,Redding,Conrad,Chandler,Yates,Fuentes,Floyd,Santana,Clay,ONeil,Haney,Hebert,Kirkland,Mathis,Quinn,Schmitt,Holder,Terrell,Pennington,Kramer,Dunlap,Hodge,Garrison,Henson,Wall,Barton,Meadows,Solis,Pacheco,Mercado,Whitley,Aguirre,McKinney,Dyer,Pugh,Conway,Vang,ONeal,McLean,Denny,Galvan,Justice,Glass,Rubio,Merritt,Powers,Haynes,Crenshaw,Vick,Schaeffer,Guthrie,Aldridge,Montoya,Boone,Sargent,Knowles,Benton,Herman,McCullough,Blevins,Kincaid,Callahan,Childers,Cowan,Branch,McKee,Fain,Wilkerson,Cherry,Wing,Kohler,Cline,Lamb,Crosby,Henson,Barlow,Lahey,Maddox,Melton,ONeal,Ritter,Skaggs,Talley,Tolbert,Tolle,Vann,Walden,Waller,Watts,Weeks,Welch,Weldon,Whaley,Wheat,Whitaker,Whitley,Wiggins,Wiley,Wilkerson,Wilkes,Wilkins,Wilkinson,Willems,Williams,Williamson,Willis,Willoughby,Wils,Wilson,Wilton,Wing,Winkler,Winston,Winter,Witt,Wolfe,Womack,Wood,Woodard,Woodbury,Woodruff,Woods,Woodward,Wooldridge,Wooley,Woolley,Workman,Worthen,Worthy,Wren,Wright,Wu,Wyatt,Wyman,Wynn,Yates,Yoder,York,Yount,Young,Younts,Yowell,Yu,Yung".split(',');
+
         // --- 1. THEME LOGIC ---
         function applyTheme(theme) {
             const isLight = theme === 'light';
@@ -451,10 +432,10 @@
             });
         });
 
-        // --- 3. HELPER FUNGSI RENDER OUTPUT (UNTUK KLIK PER BARIS) ---
+        // --- 3. HELPER FUNGSI RENDER OUTPUT ---
         function renderOutputLines(containerId, dataArray) {
             const container = document.getElementById(containerId);
-            container.innerHTML = ''; // Clear dulu
+            container.innerHTML = '';
             
             if (!dataArray || dataArray.length === 0) {
                 container.innerHTML = '<span style="color:var(--text-muted); font-size:0.8rem;">Kosong...</span>';
@@ -468,8 +449,6 @@
                 
                 lineDiv.onclick = function() {
                     copySingleText(lineText);
-                    // Toggle class 'copied' saat diklik
-                    // Ini akan mengubah warna teks menjadi hijau sesuai CSS
                     this.classList.toggle('copied');
                 };
                 
@@ -501,7 +480,6 @@
 
             renderOutputLines('outputUser', users);
             renderOutputLines('outputCode', codes);
-            
             showToast("Data berhasil diproses!");
         }
 
@@ -593,10 +571,8 @@
             document.getElementById('totpTimerText').innerText = "Ready";
         }
 
-        // --- 6. USERNAME GENERATOR LOGIC (UPDATED) ---
         function generateUsernames() {
             const count = parseInt(document.getElementById('genCount').value) || 10;
-            const format = document.getElementById('genFormat').value; // Ambil format: 'dot' atau 'underscore'
             
             let results = [];
             
@@ -604,23 +580,20 @@
                 const fname = firstNamesRaw[Math.floor(Math.random() * firstNamesRaw.length)].toLowerCase();
                 const lname = lastNamesRaw[Math.floor(Math.random() * lastNamesRaw.length)].toLowerCase();
                 
-                let finalUsername = "";
-
-                if (format === 'underscore') {
-                    // Format Baru: firstname_lastnameNNN (3 digit angka)
-                    const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-                    finalUsername = `${fname}_${lname}${randomNum}`;
-                } else {
-                    // Format Lama (Default): firstname.lastnameNN (2 digit angka)
-                    const randomNum = Math.floor(Math.random() * 100).toString().padStart(2, '0');
-                    finalUsername = `${fname}.${lname}${randomNum}`;
-                }
-
+                const useDot = Math.random() < 0.5; // 50% kemungkinan true
+                const separator = useDot ? '.' : '_';
+                
+                const numLength = useDot ? 2 : 3;
+                const maxNum = useDot ? 100 : 1000;
+                
+                const randomNum = Math.floor(Math.random() * maxNum).toString().padStart(numLength, '0');
+                
+                const finalUsername = `${fname}${separator}${lname}${randomNum}`;
                 results.push(finalUsername);
             }
 
             renderOutputLines('genOutput', results);
-            showToast(`${count} sukses!`);
+            showToast(`${count} username berhasil dibuat!`);
         }
 
         // --- 7. UTILS ---
@@ -640,7 +613,7 @@
             if(!text || text === "") return showToast("", "#ef4444");
             
             navigator.clipboard.writeText(text).then(() => {
-                showToast("disalin!");
+                showToast("Semua berhasil disalin!");
             });
         }
 
