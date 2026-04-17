@@ -183,6 +183,7 @@
             opacity: 0;
             color: var(--text-muted);
             transition: opacity 0.2s;
+            user-select: none; /* Mencegah seleksi teks pada ikon */
         }
 
         .clickable-line:hover .copy-hint {
@@ -320,7 +321,7 @@
             <button class="tab-btn" data-target="genuser">Username Gen</button>
         </nav>
 
-        <!-- TAB 1: MERGE / SPLIT TOOL (TIDAK DIUBAH SESUAI REQUEST) -->
+        <!-- TAB 1: MERGE / SPLIT TOOL -->
         <div id="tab-split" class="tab-content active">
             
             <!-- SECTION 1: INPUT UTAMA -->
@@ -335,8 +336,6 @@
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                 Split
                 </button>
-                <p style="font-size:0.8rem; color:var(--text-muted); margin-top:8px;">
-                </p>
             </section>
 
             <!-- SECTION 2: OUTPUT/INPUT EDITABLE -->
@@ -362,12 +361,10 @@
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path></svg>
                 join
             </button>
-            <p style="font-size:0.8rem; color:var(--text-muted); margin-top:8px; text-align:center;">
-            </p>
 
         </div>
 
-        <!-- TAB 2: TOTP GENERATOR (DIUBAH: KLIK TIAP BARIS) -->
+        <!-- TAB 2: TOTP GENERATOR -->
         <div id="tab-totp" class="tab-content">
             <div class="card">
                 <div class="totp-header">
@@ -400,7 +397,7 @@
             </div>
         </div>
 
-        <!-- TAB 3: USERNAME GENERATOR (DIUBAH: KLIK TIAP BARIS) -->
+        <!-- TAB 3: USERNAME GENERATOR -->
         <div id="tab-genuser" class="tab-content">
             <div class="card">
                 <h3>Generator Username </h3>
@@ -470,7 +467,7 @@
             });
         });
 
-        // --- 3. MERGE / SPLIT TOOL LOGIC (TIDAK DIUBAH) ---
+        // --- 3. MERGE / SPLIT TOOL LOGIC ---
         function processData() {
             const rawInput = document.getElementById('inputData').value;
             if (!rawInput.trim()) {
@@ -539,7 +536,7 @@
             showToast("Semua data direset");
         }
 
-        // --- 4. TOTP LOGIC (DIUBAH: RENDER LIST KLIK) ---
+        // --- 4. TOTP LOGIC ---
         function base32ToBytes(base32) {
             const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
             let bits = 0, value = 0, output = [];
@@ -599,7 +596,7 @@
                 results.push(code);
             }
             
-            // RENDER INTERAKTIF: Ganti innerText dengan element div yang bisa diklik
+            // RENDER INTERAKTIF
             renderClickableList(outputContainer, results);
 
             const epoch = Math.floor(Date.now() / 1000);
@@ -623,7 +620,7 @@
             document.getElementById('totpTimerText').innerText = "Ready";
         }
 
-        // --- 5. USERNAME GENERATOR (DIUBAH: RENDER LIST KLIK) ---
+        // --- 5. USERNAME GENERATOR ---
         function generateUsernames() {
             const count = parseInt(document.getElementById('genCount').value) || 10;
             
@@ -686,7 +683,7 @@
             });
         }
 
-        // Fungsi salin semua (mendukung Textarea dan Container List)
+        // Fungsi salin semua (UPDATE LOGIC DISINI)
         function copyAllFromEl(id) {
             const el = document.getElementById(id);
             let text = "";
@@ -697,8 +694,22 @@
             } 
             // Jika itu Div Container (TOTP/GenOutput)
             else {
-                // Ambil semua teks anak
-                text = el.innerText;
+                // Cek apakah elemen memiliki class clickable-line
+                const items = el.querySelectorAll('.clickable-line');
+                
+                if (items.length > 0) {
+                    // Ambil teks dari child pertama setiap item (abaikan hint/emoji)
+                    text = Array.from(items)
+                        .map(item => {
+                            // firstChild di sini adalah span yang berisi teks asli
+                            return item.firstChild ? item.firstChild.textContent.trim() : '';
+                        })
+                        .filter(t => t !== '') // Hapus baris kosong
+                        .join('\n');
+                } else {
+                    // Fallback normal jika bukan list clickable
+                    text = el.innerText;
+                }
             }
             
             if(!text.trim()) return showToast("Tidak ada data untuk disalin", "#ef4444");
