@@ -15,6 +15,7 @@
             --text-muted: #94a3b8;
             --border: #334155;
             --success: #10b981;
+            --danger: #ef4444;
             --input-bg: #0f172a;
             --tab-active: #1e293b;
             --tab-inactive: #0f172a;
@@ -280,7 +281,7 @@
         .btn-secondary:hover { filter: brightness(1.1); }
 
         .btn-danger {
-            background-color: #ef4444;
+            background-color: var(--danger);
             color: white;
             width: 100%;
             margin-top: 10px;
@@ -338,7 +339,14 @@
         .stats-text {
             font-size: 0.85rem;
             color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: bold;
         }
+
+        .stat-removed { color: var(--danger); }
+        .stat-kept { color: var(--success); }
 
         /* --- Toast --- */
         #toast {
@@ -377,7 +385,6 @@
             <button class="tab-btn" data-target="totp">TOTP Generator</button>
             <button class="tab-btn" data-target="genuser">Username Gen</button>
             <button class="tab-btn" data-target="fullname">Full Name Gen</button>
-            <!-- TAB BARU: FILTER -->
             <button class="tab-btn" data-target="filter">Filter List</button>
         </nav>
 
@@ -513,11 +520,12 @@
             </section>
         </div>
 
-        <!-- TAB 5: FILTER LIST (BARU) -->
+        <!-- TAB 5: FILTER LIST (UPDATED) -->
         <div id="tab-filter" class="tab-content">
             <div class="card">
-                <h3>Filter</h3>
+                <h3>Filter List</h3>
                 <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:15px;">
+                    Memisahkan data menjadi dua: Data yang tidak diblokir dan Data yang cocok dengan daftar hapus.
                 </p>
 
                 <div class="row">
@@ -529,7 +537,7 @@
                     </div>
                     <div class="col">
                         <div class="form-group">
-                            <label>Username yang Dihapus</label>
+                            <label>Daftar User yang Dihapus</label>
                             <textarea id="filterInputExclude" class="h-250" placeholder="user1&#10;user3"></textarea>
                         </div>
                     </div>
@@ -548,13 +556,33 @@
                 </div>
             </div>
 
-            <section class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <div class="stats-text" id="filterStats">Menunggu input...</div>
-                </div>
-                <div id="filterOutput" class="output-box h-400"></div>
-                <button class="btn-copy" onclick="copyAllFromEl('filterOutput')">Salin Hasil</button>
-            </section>
+            <!-- STATS -->
+            <div class="stats-text" id="filterStats" style="padding: 0 5px;">
+                <span>Total Awal: 0</span>
+                <span>Dihapus: 0</span>
+                <span>Sisa: 0</span>
+            </div>
+
+            <!-- OUTPUT AREA -->
+            <div class="row">
+                <!-- KOLOM KIRI: HASIL FILTER -->
+                <section class="card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <label style="margin:0;">Hasil Filter (Sisa)</label>
+                        <button class="btn-secondary" onclick="copyAllFromEl('filterOutput')">Salin</button>
+                    </div>
+                    <div id="filterOutput" class="output-box h-400"></div>
+                </section>
+
+                <!-- KOLOM KANAN: YANG DIHAPUS -->
+                <section class="card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <label style="margin:0; color:var(--danger);">User yang Dihapus</label>
+                        <button class="btn-secondary" onclick="copyAllFromEl('filterRemoved')">Salin</button>
+                    </div>
+                    <div id="filterRemoved" class="output-box h-400" style="border-color: var(--danger);"></div>
+                </section>
+            </div>
         </div>
 
     </div>
@@ -846,11 +874,12 @@
             });
         }
 
-        // --- 6. FILTER LIST LOGIC (BARU) ---
+        // --- 6. FILTER LIST LOGIC (UPDATED) ---
         function processFilter() {
             const mainInput = document.getElementById('filterInputMain').value;
             const excludeInput = document.getElementById('filterInputExclude').value;
             const outputContainer = document.getElementById('filterOutput');
+            const removedContainer = document.getElementById('filterRemoved');
             const statsDiv = document.getElementById('filterStats');
 
             if (!mainInput.trim()) {
@@ -871,6 +900,7 @@
             let totalOriginal = 0;
             let totalRemoved = 0;
             let resultLines = [];
+            let removedLines = [];
 
             mainLines.forEach(line => {
                 if (!line.trim()) return;
@@ -880,19 +910,31 @@
 
                 if (excludeSet.has(currentUsername)) {
                     totalRemoved++;
+                    removedLines.push(line);
                 } else {
                     resultLines.push(line);
                 }
             });
 
-            // Render Output
+            // Render Output Sisa
             if (resultLines.length > 0) {
                 renderClickableList(outputContainer, resultLines);
             } else {
                 outputContainer.innerHTML = '<span style="color:var(--text-muted); font-style:italic; padding:10px; display:block;">Semua baris terhapus atau tidak ada data yang cocok.</span>';
             }
 
-            statsDiv.innerHTML = `Awal: <strong>${totalOriginal}</strong> | Hapus: <strong style="color:#ef4444">${totalRemoved}</strong> | Sisa: <strong style="color:#10b981">${resultLines.length}</strong>`;
+            // Render Output yang Dihapus (BARU)
+            if (removedLines.length > 0) {
+                renderClickableList(removedContainer, removedLines);
+            } else {
+                removedContainer.innerHTML = '<span style="color:var(--text-muted); font-style:italic; padding:10px; display:block;">Tidak ada data yang dihapus.</span>';
+            }
+
+            statsDiv.innerHTML = `
+                <span>Total Awal: <strong>${totalOriginal}</strong></span> 
+                <span class="stat-removed">Dihapus: <strong>${totalRemoved}</strong></span> 
+                <span class="stat-kept">Sisa: <strong>${resultLines.length}</strong></span>
+            `;
             showToast("Filter selesai diproses!");
         }
 
@@ -900,7 +942,8 @@
             document.getElementById('filterInputMain').value = '';
             document.getElementById('filterInputExclude').value = '';
             document.getElementById('filterOutput').innerHTML = '';
-            document.getElementById('filterStats').textContent = 'Menunggu input...';
+            document.getElementById('filterRemoved').innerHTML = '';
+            document.getElementById('filterStats').innerHTML = '<span>Total Awal: 0</span><span>Dihapus: 0</span><span>Sisa: 0</span>';
             showToast("Filter di-reset");
         }
 
